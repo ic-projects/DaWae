@@ -1,9 +1,9 @@
 #include <cstdlib>
+#include <iostream>
+#include "Instruction.h"
 
 int main()
 {
-	// Stuff  
-
-	exit(-10);
+	std::cout << "Hello word\n";
 }
 
