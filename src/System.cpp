@@ -164,7 +164,7 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
 }
 
 uint8_t System::getExitCode() {
-    return(readRegister(2) & 0x8F);
+    return static_cast<uint8_t>(readRegister(2) & 0xFF);
 }
 
 void System::executeRTypeInstruction(Instruction *instruction) {

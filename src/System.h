@@ -15,6 +15,7 @@ using namespace std;
 #define ADDR_DATA 0x20000000
 #define ADDR_GETC 0x30000000
 #define ADDR_PUTC 0x30000004
+#define BYTE_MASK 0xFF
 
 class System {
 private:

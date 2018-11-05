@@ -43,7 +43,7 @@ simulator: bin/simulator
 
 # Dummy for build testbench to conform to spec. Could do nothing
 testbench:
-	@echo "Nothing to do"
+	cd test/ && python mips_testbench.py
 
 clean:
 	rm -rf bin
