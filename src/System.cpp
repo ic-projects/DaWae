@@ -126,7 +126,7 @@ uint8_t System::readMemoryByte(uint32_t address) {
 
 uint16_t System::readMemoryHalfWord(uint32_t address) {
     uint16_t result = 0;
-    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES / 2; i++) {
+    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
         result += readMemoryByte(address + i) << (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1));
     }
     return result;
@@ -147,6 +147,13 @@ void System::writeMemoryByte(uint32_t address, uint8_t byte) {
     memory[address] = byte;
 }
 
+void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
+    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
+        auto byte = static_cast<uint8_t>(halfWord >> (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
+        writeMemoryByte(address + i, byte);
+    }
+}
+
 uint32_t System::readRegister(uint8_t reg) {
     if (reg < REGISTERS_SIZE) {
         return registers[reg];
@@ -164,7 +171,7 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
 }
 
 uint8_t System::getExitCode() {
-    return static_cast<uint8_t>(readRegister(2) & 0xFF);
+    return static_cast<uint8_t>(readRegister(2) & MASK_BYTE);
 }
 
 void System::executeRTypeInstruction(Instruction *instruction) {

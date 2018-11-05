@@ -15,7 +15,6 @@ using namespace std;
 #define ADDR_DATA 0x20000000
 #define ADDR_GETC 0x30000000
 #define ADDR_PUTC 0x30000004
-#define BYTE_MASK 0xFF
 
 class System {
 private:
@@ -93,6 +92,7 @@ public:
     uint8_t readMemoryByte(uint32_t address);
     void writeMemoryWord(uint32_t address, uint32_t word);
     void writeMemoryByte(uint32_t address, uint8_t byte);
+    void writeMemoryHalfWord(uint32_t address, uint16_t halfWord);
 
     // Registers
     uint32_t readRegister(uint8_t reg);
