@@ -21,7 +21,9 @@ uint8_t Instruction::getRegisterD() {
 }
 
 void Instruction::printRaw() {
-    cout << bitset<WORD_SIZE_IN_BYTES * 8>(instruction) << endl;
+    char buffer[50];
+    sprintf(buffer, "0x%08x", instruction);
+    cout << buffer << endl;
 }
 
 uint8_t Instruction::getShiftAmount() {

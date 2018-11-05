@@ -93,7 +93,6 @@ private:
     uint32_t instruction;
 public:
     explicit Instruction(uint32_t instruction) : instruction(instruction) {};
-
     InstructionOpcode getOpcode();
     uint8_t getRegisterS();
     uint8_t getRegisterT();
@@ -102,7 +101,6 @@ public:
     RTypeFunctionCode getFunctionCode();
     uint16_t getImmediateOperand();
     uint32_t getJumpAddress();
-
     void printRaw();
 };
 

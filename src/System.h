@@ -23,6 +23,58 @@ private:
     uint32_t registers[REGISTERS_SIZE] = {0};
     uint8_t memory[MEMORY_SIZE_BYTES] = {0};
 
+    void _addiu(Instruction *instruction);
+    void _slti(Instruction *instruction);
+    void _sltiu(Instruction *instruction);
+    void _andi(Instruction *instruction);
+    void _ori(Instruction *instruction);
+    void _xori(Instruction *instruction);
+    void _lui(Instruction *instruction);
+    void _beq(Instruction *instruction);
+    void _bne(Instruction *instruction);
+    void _blez(Instruction *instruction);
+    void _bgtz(Instruction *instruction);
+    void _b_spec(Instruction *instruction);
+    void _lb(Instruction *instruction);
+    void _lh(Instruction *instruction);
+    void _lbu(Instruction *instruction);
+    void _lw(Instruction *instruction);
+    void _sb(Instruction *instruction);
+    void _sh(Instruction *instruction);
+    void _sw(Instruction *instruction);
+    void _addi(Instruction *instruction);
+    void _lhu(Instruction *instruction);
+    void _lwl(Instruction *instruction);
+    void _lwr(Instruction *instruction);
+    void _sllv(Instruction *instruction);
+    void _srav(Instruction *instruction);
+    void _srlv(Instruction *instruction);
+
+    // R-Type functions
+    void _sll(Instruction *instruction);
+    void _srl(Instruction *instruction);
+    void _sra(Instruction *instruction);
+    void _add(Instruction *instruction);
+    void _addu(Instruction *instruction);
+    void _sub(Instruction *instruction);
+    void _subu(Instruction *instruction);
+    void _and(Instruction *instruction);
+    void _or(Instruction *instruction);
+    void _xor(Instruction *instruction);
+    void _nor(Instruction *instruction);
+    void _slt(Instruction *instruction);
+    void _sltu(Instruction *instruction);
+    void _jr(Instruction *instruction);
+    void _jalr(Instruction *instruction);
+    void _div(Instruction *instruction);
+    void _divu(Instruction *instruction);
+    void _mfhi(Instruction *instruction);
+    void _mflo(Instruction *instruction);
+    void _mthi(Instruction *instruction);
+    void _mtlo(Instruction *instruction);
+    void _mult(Instruction *instruction);
+    void _multu(Instruction *instruction);
+
 public:
     System(){};
     void start();

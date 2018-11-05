@@ -24,6 +24,7 @@ void System::executeInstruction(Instruction *instruction) {
             executeRTypeInstruction(instruction);
             break;
         case ADDIU:
+            _addiu(instruction);
             break;
         case SLTI:
             break;
@@ -85,7 +86,7 @@ uint32_t System::readMemoryWord(uint32_t address) {
 }
 
 uint8_t System::readMemoryByte(uint32_t address) {
-    if (address < ADDR_INSTR || (address <= ADDR_PUTC && address < (ADDR_PUTC + 4))) {
+    if (address < ADDR_INSTR || (address >= ADDR_PUTC && address < (ADDR_PUTC + 4))) {
         cerr << "Attempted to read from an invalid or write-only memory address." << endl;
         exit(ERROR_MEMORY_EXCEPTION);
     }
@@ -126,50 +127,274 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
 void System::executeRTypeInstruction(Instruction *instruction) {
     switch (instruction->getFunctionCode()) {
         case SLL:
+            _sll(instruction);
             break;
         case SRL:
+            _srl(instruction);
             break;
         case SRA:
+            _sra(instruction);
             break;
         case ADD:
+            _add(instruction);
             break;
         case ADDU:
+            _addu(instruction);
             break;
         case SUB:
+            _sub(instruction);
             break;
         case SUBU:
+            _subu(instruction);
             break;
         case AND:
+            _and(instruction);
             break;
         case OR:
+            _or(instruction);
             break;
         case XOR:
+            _xor(instruction);
             break;
         case NOR:
+            _nor(instruction);
             break;
         case SLT:
+            _slt(instruction);
             break;
         case SLTU:
+            _sltu(instruction);
             break;
         case JR:
+            _jr(instruction);
             break;
         case JALR:
+            _jalr(instruction);
             break;
         case DIV:
+            _div(instruction);
             break;
         case DIVU:
+            _divu(instruction);
             break;
         case MFHI:
+            _mfhi(instruction);
             break;
         case MFLO:
+            _mflo(instruction);
             break;
         case MTHI:
+            _mthi(instruction);
             break;
         case MTLO:
+            _mtlo(instruction);
             break;
         case MULT:
+            _mult(instruction);
             break;
         case MULTU:
+            _multu(instruction);
             break;
     }
+}
+
+// R-Type Instructions
+void System::_sll(Instruction *instruction) {
+
+}
+
+void System::_srl(Instruction *instruction) {
+
+}
+
+void System::_sra(Instruction *instruction) {
+
+}
+
+void System::_add(Instruction *instruction) {
+
+}
+
+void System::_addu(Instruction *instruction) {
+    uint32_t result = readRegister(instruction->getRegisterS())
+                    + readRegister(instruction->getRegisterT());
+    writeRegister(instruction->getRegisterD(), result);
+}
+
+void System::_sub(Instruction *instruction) {
+
+}
+
+void System::_subu(Instruction *instruction) {
+
+}
+
+void System::_and(Instruction *instruction) {
+
+}
+
+void System::_or(Instruction *instruction) {
+
+}
+
+void System::_xor(Instruction *instruction) {
+
+}
+
+void System::_nor(Instruction *instruction) {
+
+}
+
+void System::_slt(Instruction *instruction) {
+
+}
+
+void System::_sltu(Instruction *instruction) {
+
+}
+
+void System::_jr(Instruction *instruction) {
+
+}
+
+void System::_jalr(Instruction *instruction) {
+
+}
+
+void System::_div(Instruction *instruction) {
+
+}
+
+void System::_divu(Instruction *instruction) {
+
+}
+
+void System::_mfhi(Instruction *instruction) {
+
+}
+
+void System::_mflo(Instruction *instruction) {
+
+}
+
+void System::_mthi(Instruction *instruction) {
+
+}
+
+void System::_mtlo(Instruction *instruction) {
+
+}
+
+void System::_mult(Instruction *instruction) {
+
+}
+
+void System::_multu(Instruction *instruction) {
+
+}
+
+void System::_addiu(Instruction *instruction) {
+    uint32_t result = readRegister(instruction->getRegisterS())
+                    + instruction->getImmediateOperand();
+    writeRegister(instruction->getRegisterT(), result);
+}
+
+void System::_slti(Instruction *instruction) {
+
+}
+
+void System::_sltiu(Instruction *instruction) {
+
+}
+
+void System::_andi(Instruction *instruction) {
+
+}
+
+void System::_ori(Instruction *instruction) {
+
+}
+
+void System::_xori(Instruction *instruction) {
+
+}
+
+void System::_lui(Instruction *instruction) {
+
+}
+
+void System::_beq(Instruction *instruction) {
+
+}
+
+void System::_bne(Instruction *instruction) {
+
+}
+
+void System::_blez(Instruction *instruction) {
+
+}
+
+void System::_bgtz(Instruction *instruction) {
+
+}
+
+void System::_b_spec(Instruction *instruction) {
+
+}
+
+void System::_lb(Instruction *instruction) {
+
+}
+
+void System::_lh(Instruction *instruction) {
+
+}
+
+void System::_lbu(Instruction *instruction) {
+
+}
+
+void System::_lw(Instruction *instruction) {
+
+}
+
+void System::_sb(Instruction *instruction) {
+
+}
+
+void System::_sh(Instruction *instruction) {
+
+}
+
+void System::_sw(Instruction *instruction) {
+
+}
+
+void System::_addi(Instruction *instruction) {
+
+}
+
+void System::_lhu(Instruction *instruction) {
+
+}
+
+void System::_lwl(Instruction *instruction) {
+
+}
+
+void System::_lwr(Instruction *instruction) {
+
+}
+
+void System::_sllv(Instruction *instruction) {
+
+}
+
+void System::_srav(Instruction *instruction) {
+
+}
+
+void System::_srlv(Instruction *instruction) {
+
 }
