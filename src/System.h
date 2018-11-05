@@ -10,6 +10,7 @@ using namespace std;
 #define MEMORY_SIZE_BYTES 4294967296
 #define REGISTERS_SIZE 32
 
+#define ADDR_NULL 0x0
 #define ADDR_INSTR 0x10000000
 #define ADDR_DATA 0x20000000
 #define ADDR_GETC 0x30000000
@@ -23,6 +24,7 @@ private:
     uint32_t registers[REGISTERS_SIZE] = {0};
     uint8_t memory[MEMORY_SIZE_BYTES] = {0};
 
+    // I-Type functions
     void _addiu(Instruction *instruction);
     void _slti(Instruction *instruction);
     void _sltiu(Instruction *instruction);
@@ -91,6 +93,9 @@ public:
     // Registers
     uint32_t readRegister(uint8_t reg);
     void writeRegister(uint8_t reg, uint32_t word);
+
+    // Print system status for testing
+    void dumpAndExit();
 };
 
 
