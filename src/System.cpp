@@ -10,14 +10,14 @@ void System::start() {
 
         // Check for zero instruction
         if (raw == 0) {
-            dumpAndExit();
+            exit(getExitCode());
         }
 
         auto *instruction = new Instruction(raw);
         executeInstruction(instruction);
         pc += WORD_SIZE_IN_BYTES;
     }
-    dumpAndExit();
+    exit(getExitCode());
 }
 
 void System::setMemoryFromStream(ifstream *stream) {
@@ -131,16 +131,8 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
     registers[reg] = word;
 }
 
-void System::dumpAndExit() {
-    cout << "[";
-    for (size_t i = 0; i < REGISTERS_SIZE; i++) {
-        cout << registers[i];
-        if (i != REGISTERS_SIZE - 1) {
-            cout << ",";
-        }
-    }
-    cout << " ]" << endl;
-    exit(0);
+uint8_t System::getExitCode() {
+    return(readRegister(2) & 0x8F);
 }
 
 void System::executeRTypeInstruction(Instruction *instruction) {

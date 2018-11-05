@@ -94,8 +94,8 @@ public:
     uint32_t readRegister(uint8_t reg);
     void writeRegister(uint8_t reg, uint32_t word);
 
-    // Print system status for testing
-    void dumpAndExit();
+    // Get lower 8 bits of $2 register
+    uint8_t getExitCode();
 };
 
 
