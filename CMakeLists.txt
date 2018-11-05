@@ -7,8 +7,7 @@ include_directories(.)
 include_directories(src)
 
 add_executable(arch2_2018_cw
-        src/simulator.cpp
-        linker.ld
+        src/Simulator.cpp
         Makefile
-        readme.md
-        reflection.md src/Instruction.cpp src/Instruction.h)
+        example.bin
+        src/Instruction.cpp src/Instruction.h src/System.cpp src/System.h src/Errors.h)

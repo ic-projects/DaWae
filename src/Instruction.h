@@ -3,7 +3,13 @@
 
 #include <cstdint>
 
+#define WORD_SIZE_IN_BYTES 4
+#define REG_MASK 0b11111
+#define BYTE_MASK 0b1111
 #define OPCODE_SHIFT 26
+#define REG_S_SHIFT 21
+#define REG_T_SHIFT 16
+#define REG_D_SHIFT 11
 
 enum RTypeFunctionCodes {
     SLL     = 0b000000,
@@ -54,7 +60,6 @@ enum InstructionOpcode {
     SB      = 0b101000,
     SH      = 0b101001,
     SW      = 0b101011,
-
     ADDI    = 0b001000,
     LHU     = 0b100101,
     LWL     = 0b100010,
@@ -79,8 +84,13 @@ class Instruction {
 private:
     uint32_t instruction;
 public:
-    Instruction(uint32_t instruction);
+    Instruction(uint32_t instruction) : instruction(instruction) {};
+
     InstructionOpcode getOpcode();
+    uint8_t getRegisterS();
+    uint8_t getRegisterT();
+    uint8_t getRegisterD();
+    void printRaw();
 };
 
 #endif

@@ -1,0 +1,10 @@
+#ifndef ERRORS_H
+#define ERRORS_H
+
+#define ERROR_INTERNAL -20
+#define ERROR_ARITHMETIC -11
+#define ERROR_MEMORY_EXCEPTION -11
+#define ERROR_INVALID_INSTRUCTION -12
+#define ERROR_IO -21
+
+#endif
