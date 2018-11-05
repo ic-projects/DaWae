@@ -34,52 +34,76 @@ void System::executeInstruction(Instruction *instruction) {
             _addiu(instruction);
             break;
         case SLTI:
+            _slti(instruction);
             break;
         case SLTIU:
+            _sltiu(instruction);
             break;
         case ANDI:
+            _andi(instruction);
             break;
         case ORI:
+            _ori(instruction);
             break;
         case XORI:
+            _xori(instruction);
             break;
         case LUI:
+            _lui(instruction);
             break;
         case BEQ:
+            _beq(instruction);
             break;
         case BNE:
+            _bne(instruction);
             break;
         case BLEZ:
+            _blez(instruction);
             break;
         case BGTZ:
+            _bgtz(instruction);
             break;
         case B_SPEC:
+            _b_spec(instruction);
             break;
         case LB:
+            _lb(instruction);
             break;
         case LH:
+            _lh(instruction);
             break;
         case LBU:
+            _lbu(instruction);
             break;
         case LW:
+            _lw(instruction);
             break;
         case SB:
+            _sb(instruction);
             break;
         case SH:
+            _sh(instruction);
             break;
         case SW:
+            _sw(instruction);
             break;
         case ADDI:
+            _addi(instruction);
             break;
         case LHU:
+            _lhu(instruction);
             break;
         case LWL:
+            _lwl(instruction);
             break;
         case LWR:
+            _lwr(instruction);
             break;
         case J:
+            _j(instruction);
             break;
         case JAL:
+            _jalr(instruction);
             break;
     }
 }
@@ -100,6 +124,14 @@ uint8_t System::readMemoryByte(uint32_t address) {
     return memory[address];
 }
 
+uint16_t System::readMemoryHalfWord(uint32_t address) {
+    uint16_t result = 0;
+    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES / 2; i++) {
+        result += readMemoryByte(address + i) << (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1));
+    }
+    return result;
+}
+
 void System::writeMemoryWord(uint32_t address, uint32_t word) {
     for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
         auto byte = static_cast<uint8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
@@ -116,7 +148,7 @@ void System::writeMemoryByte(uint32_t address, uint8_t byte) {
 }
 
 uint32_t System::readRegister(uint8_t reg) {
-    if (reg >= 0 && reg < REGISTERS_SIZE) {
+    if (reg < REGISTERS_SIZE) {
         return registers[reg];
     }
     cerr << "Attempted to read an invalid register." << endl;
@@ -124,7 +156,7 @@ uint32_t System::readRegister(uint8_t reg) {
 }
 
 void System::writeRegister(uint8_t reg, uint32_t word) {
-    if (reg < 0 && reg >= REGISTERS_SIZE) {
+    if (reg >= REGISTERS_SIZE) {
         cerr << "Attempted to write to an invalid register." << endl;
         exit(ERROR_INVALID_INSTRUCTION);
     }
@@ -355,11 +387,15 @@ void System::_b_spec(Instruction *instruction) {
 }
 
 void System::_lb(Instruction *instruction) {
-
+    uint8_t byte = readMemoryByte( instruction->getImmediateOperand()
+                                   + instruction->getRegisterS());
+    writeRegister(instruction->getRegisterT(), byte);
 }
 
 void System::_lh(Instruction *instruction) {
-
+    uint16_t word = readMemoryHalfWord( instruction->getImmediateOperand()
+                                        + instruction->getRegisterS());
+    writeRegister(instruction->getRegisterT(), word);
 }
 
 void System::_lbu(Instruction *instruction) {
@@ -367,7 +403,9 @@ void System::_lbu(Instruction *instruction) {
 }
 
 void System::_lw(Instruction *instruction) {
-
+    uint32_t word = readMemoryWord( instruction->getImmediateOperand()
+                                    + instruction->getRegisterS());
+    writeRegister(instruction->getRegisterT(), word);
 }
 
 void System::_sb(Instruction *instruction) {
@@ -407,5 +445,13 @@ void System::_srav(Instruction *instruction) {
 }
 
 void System::_srlv(Instruction *instruction) {
+
+}
+
+void System::_j(Instruction *instruction) {
+
+}
+
+void System::_jal(Instruction *instruction) {
 
 }

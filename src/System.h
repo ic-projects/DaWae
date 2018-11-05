@@ -51,6 +51,8 @@ private:
     void _sllv(Instruction *instruction);
     void _srav(Instruction *instruction);
     void _srlv(Instruction *instruction);
+    void _j(Instruction *instruction);
+    void _jal(Instruction *instruction);
 
     // R-Type functions
     void _sll(Instruction *instruction);
@@ -86,6 +88,7 @@ public:
 
     // Memory
     uint32_t readMemoryWord(uint32_t address);
+    uint16_t readMemoryHalfWord(uint32_t address);
     uint8_t readMemoryByte(uint32_t address);
     void writeMemoryWord(uint32_t address, uint32_t word);
     void writeMemoryByte(uint32_t address, uint8_t byte);

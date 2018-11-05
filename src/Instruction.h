@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #define WORD_SIZE_IN_BYTES 4
+#define HALF_WORD_SIZE_IN_BYTES 2
 
 // Masks
 #define MASK_REG 0x1F
