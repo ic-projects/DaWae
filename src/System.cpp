@@ -21,6 +21,7 @@ void System::setMemoryFromStream(ifstream *stream) {
 void System::executeInstruction(Instruction *instruction) {
     switch (instruction->getOpcode()) {
         case R:
+            executeRTypeInstruction(instruction);
             break;
         case ADDIU:
             break;
@@ -120,4 +121,55 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
         exit(ERROR_INVALID_INSTRUCTION);
     }
     registers[reg] = word;
+}
+
+void System::executeRTypeInstruction(Instruction *instruction) {
+    switch (instruction->getFunctionCode()) {
+        case SLL:
+            break;
+        case SRL:
+            break;
+        case SRA:
+            break;
+        case ADD:
+            break;
+        case ADDU:
+            break;
+        case SUB:
+            break;
+        case SUBU:
+            break;
+        case AND:
+            break;
+        case OR:
+            break;
+        case XOR:
+            break;
+        case NOR:
+            break;
+        case SLT:
+            break;
+        case SLTU:
+            break;
+        case JR:
+            break;
+        case JALR:
+            break;
+        case DIV:
+            break;
+        case DIVU:
+            break;
+        case MFHI:
+            break;
+        case MFLO:
+            break;
+        case MTHI:
+            break;
+        case MTLO:
+            break;
+        case MULT:
+            break;
+        case MULTU:
+            break;
+    }
 }

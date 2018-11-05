@@ -28,8 +28,8 @@ uint8_t Instruction::getShiftAmount() {
     return static_cast<uint8_t>((instruction >> SHIFT_SHIFT_AMOUNT) & MASK_REG);
 }
 
-uint8_t Instruction::getFunctionCode() {
-    return static_cast<uint8_t>(instruction & MASK_FUNCTION_CODE);
+RTypeFunctionCode Instruction::getFunctionCode() {
+    return static_cast<RTypeFunctionCode>(instruction & MASK_FUNCTION_CODE);
 }
 
 uint16_t Instruction::getImmediateOperand() {

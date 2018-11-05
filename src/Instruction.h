@@ -19,7 +19,7 @@
 #define SHIFT_RED_D 11
 #define SHIFT_SHIFT_AMOUNT 6
 
-enum RTypeFunctionCodes {
+enum RTypeFunctionCode {
     SLL     = 0b000000,
     SRL     = 0b000010,
     SRA     = 0b000011,
@@ -99,7 +99,7 @@ public:
     uint8_t getRegisterT();
     uint8_t getRegisterD();
     uint8_t getShiftAmount();
-    uint8_t getFunctionCode();
+    RTypeFunctionCode getFunctionCode();
     uint16_t getImmediateOperand();
     uint32_t getJumpAddress();
 

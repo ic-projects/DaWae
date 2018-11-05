@@ -28,6 +28,7 @@ public:
     void start();
     void setMemoryFromStream(ifstream *stream);
     void executeInstruction(Instruction *instruction);
+    void executeRTypeInstruction(Instruction *instruction);
 
     // Memory
     uint32_t readMemoryWord(uint32_t address);
