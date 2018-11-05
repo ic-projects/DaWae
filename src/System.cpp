@@ -7,6 +7,12 @@
 void System::start() {
     while (pc != 0) {
         uint32_t raw = readMemoryWord(pc);
+
+        // Check for zero instruction
+        if (raw == 0) {
+            exit(0);
+        }
+
         auto *instruction = new Instruction(raw);
         executeInstruction(instruction);
         pc += WORD_SIZE_IN_BYTES;
