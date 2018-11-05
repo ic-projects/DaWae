@@ -5,21 +5,37 @@
 using namespace std;
 
 InstructionOpcode Instruction::getOpcode() {
-    return (InstructionOpcode) (instruction >> OPCODE_SHIFT);
+    return (InstructionOpcode) (instruction >> SHIFT_OPCODE);
 }
 
 uint8_t Instruction::getRegisterS() {
-    return static_cast<uint8_t>((instruction >> REG_S_SHIFT) & REG_MASK);
+    return static_cast<uint8_t>((instruction >> SHIFT_REG_S) & MASK_REG);
 }
 
 uint8_t Instruction::getRegisterT() {
-    return static_cast<uint8_t>((instruction >> REG_T_SHIFT) & REG_MASK);
+    return static_cast<uint8_t>((instruction >> SHIFT_REG_T) & MASK_REG);
 }
 
 uint8_t Instruction::getRegisterD() {
-    return static_cast<uint8_t>((instruction >> REG_D_SHIFT) & REG_MASK);
+    return static_cast<uint8_t>((instruction >> SHIFT_RED_D) & MASK_REG);
 }
 
 void Instruction::printRaw() {
     cout << bitset<WORD_SIZE_IN_BYTES * 8>(instruction) << endl;
+}
+
+uint8_t Instruction::getShiftAmount() {
+    return static_cast<uint8_t>((instruction >> SHIFT_SHIFT_AMOUNT) & MASK_REG);
+}
+
+uint8_t Instruction::getFunctionCode() {
+    return static_cast<uint8_t>(instruction & MASK_FUNCTION_CODE);
+}
+
+uint16_t Instruction::getImmediateOperand() {
+    return static_cast<uint16_t>(instruction & MASK_IMMEDIATE_OPERAND);
+}
+
+uint32_t Instruction::getJumpAddress() {
+    return instruction & MASK_JUMP_ADDRESS;
 }

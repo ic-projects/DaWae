@@ -93,7 +93,7 @@ uint8_t System::readMemoryByte(uint32_t address) {
 
 void System::writeMemoryWord(uint32_t address, uint32_t word) {
     for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
-        auto byte = static_cast<uint8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & BYTE_MASK);
+        auto byte = static_cast<uint8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
         writeMemoryByte(address + i, byte);
     }
 }

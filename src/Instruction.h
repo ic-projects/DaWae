@@ -4,12 +4,20 @@
 #include <cstdint>
 
 #define WORD_SIZE_IN_BYTES 4
-#define REG_MASK 0b11111
-#define BYTE_MASK 0b1111
-#define OPCODE_SHIFT 26
-#define REG_S_SHIFT 21
-#define REG_T_SHIFT 16
-#define REG_D_SHIFT 11
+
+// Masks
+#define MASK_REG 0x1F
+#define MASK_BYTE 0xFF
+#define MASK_FUNCTION_CODE 0x3F
+#define MASK_JUMP_ADDRESS 0x3FFFFFF
+#define MASK_IMMEDIATE_OPERAND 0xFFFF
+
+// Shifts
+#define SHIFT_OPCODE 26
+#define SHIFT_REG_S 21
+#define SHIFT_REG_T 16
+#define SHIFT_RED_D 11
+#define SHIFT_SHIFT_AMOUNT 6
 
 enum RTypeFunctionCodes {
     SLL     = 0b000000,
@@ -84,12 +92,17 @@ class Instruction {
 private:
     uint32_t instruction;
 public:
-    Instruction(uint32_t instruction) : instruction(instruction) {};
+    explicit Instruction(uint32_t instruction) : instruction(instruction) {};
 
     InstructionOpcode getOpcode();
     uint8_t getRegisterS();
     uint8_t getRegisterT();
     uint8_t getRegisterD();
+    uint8_t getShiftAmount();
+    uint8_t getFunctionCode();
+    uint16_t getImmediateOperand();
+    uint32_t getJumpAddress();
+
     void printRaw();
 };
 
