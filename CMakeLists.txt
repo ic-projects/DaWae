@@ -8,6 +8,4 @@ include_directories(src)
 
 add_executable(arch2_2018_cw
         src/Simulator.cpp
-        Makefile
-        example.bin
         src/Instruction.cpp src/Instruction.h src/System.cpp src/System.h src/Errors.h)
