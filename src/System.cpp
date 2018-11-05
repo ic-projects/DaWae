@@ -85,7 +85,7 @@ uint32_t System::readMemoryWord(uint32_t address) {
 
 uint8_t System::readMemoryByte(uint32_t address) {
     if (address < ADDR_INSTR || (address <= ADDR_PUTC && address < (ADDR_PUTC + 4))) {
-        cerr << "Attempting to read from a write-only memory address." << endl;
+        cerr << "Attempted to read from a write-only memory address." << endl;
         exit(ERROR_MEMORY_EXCEPTION);
     }
     return memory[address];
@@ -100,7 +100,7 @@ void System::writeMemoryWord(uint32_t address, uint32_t word) {
 
 void System::writeMemoryByte(uint32_t address, uint8_t byte) {
     if (address < ADDR_INSTR || (address >= ADDR_GETC && address < (ADDR_GETC + 4))) {
-        cerr << "Attempting to write to a read-only memory address." << endl;
+        cerr << "Attempted to write to a read-only memory address." << endl;
         exit(ERROR_MEMORY_EXCEPTION);
     }
     memory[address] = byte;
@@ -110,13 +110,13 @@ uint32_t System::readRegister(uint8_t reg) {
     if (reg >= 0 && reg < REGISTERS_SIZE) {
         return registers[reg];
     }
-    cerr << "Attempting to read an invalid register." << endl;
+    cerr << "Attempted to read an invalid register." << endl;
     exit(ERROR_INVALID_INSTRUCTION);
 }
 
 void System::writeRegister(uint8_t reg, uint32_t word) {
     if (reg < 0 && reg >= REGISTERS_SIZE) {
-        cerr << "Attempting to write to an invalid register." << endl;
+        cerr << "Attempted to write to an invalid register." << endl;
         exit(ERROR_INVALID_INSTRUCTION);
     }
     registers[reg] = word;
