@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     }
 
     auto *system = new System();
-    system->setMemoryFromStream(binary);
+    system->loadInstructionsFromStream(binary);
     system->start();
     return 0;
 }

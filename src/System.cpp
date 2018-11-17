@@ -5,7 +5,7 @@
 #include "Errors.h"
 
 void System::start() {
-    while (pc != 0) {
+    while (pc != ADDR_NULL) {
         uint32_t raw = readMemoryWord(pc);
 
         // Check for zero instruction
@@ -20,95 +20,47 @@ void System::start() {
     exit(getExitCode());
 }
 
-void System::setMemoryFromStream(ifstream *stream) {
+void System::loadInstructionsFromStream(ifstream *stream) {
     // Read stream into memory starting at ADDR_INSTR
-    stream->read((char *) memory + ADDR_INSTR, MEMORY_SIZE_BYTES);
+    stream->read((char *) memory_instr, MEMORY_INSTR_SIZE);
 }
 
 void System::executeInstruction(Instruction *instruction) {
     switch (instruction->getOpcode()) {
-        case R:
-            executeRTypeInstruction(instruction);
-            break;
-        case ADDIU:
-            _addiu(instruction);
-            break;
-        case SLTI:
-            _slti(instruction);
-            break;
-        case SLTIU:
-            _sltiu(instruction);
-            break;
-        case ANDI:
-            _andi(instruction);
-            break;
-        case ORI:
-            _ori(instruction);
-            break;
-        case XORI:
-            _xori(instruction);
-            break;
-        case LUI:
-            _lui(instruction);
-            break;
-        case BEQ:
-            _beq(instruction);
-            break;
-        case BNE:
-            _bne(instruction);
-            break;
-        case BLEZ:
-            _blez(instruction);
-            break;
-        case BGTZ:
-            _bgtz(instruction);
-            break;
-        case B_SPEC:
-            _b_spec(instruction);
-            break;
-        case LB:
-            _lb(instruction);
-            break;
-        case LH:
-            _lh(instruction);
-            break;
-        case LBU:
-            _lbu(instruction);
-            break;
-        case LW:
-            _lw(instruction);
-            break;
-        case SB:
-            _sb(instruction);
-            break;
-        case SH:
-            _sh(instruction);
-            break;
-        case SW:
-            _sw(instruction);
-            break;
-        case ADDI:
-            _addi(instruction);
-            break;
-        case LHU:
-            _lhu(instruction);
-            break;
-        case LWL:
-            _lwl(instruction);
-            break;
-        case LWR:
-            _lwr(instruction);
-            break;
-        case J:
-            _j(instruction);
-            break;
-        case JAL:
-            _jalr(instruction);
-            break;
+        case R: executeRTypeInstruction(instruction); break;
+        case ADDIU: _addiu(instruction); break;
+        case SLTI: _slti(instruction); break;
+        case SLTIU: _sltiu(instruction); break;
+        case ANDI: _andi(instruction); break;
+        case ORI: _ori(instruction); break;
+        case XORI: _xori(instruction); break;
+        case LUI: _lui(instruction); break;
+        case BEQ: _beq(instruction); break;
+        case BNE: _bne(instruction); break;
+        case BLEZ: _blez(instruction); break;
+        case BGTZ: _bgtz(instruction); break;
+        case B_SPEC: _b_spec(instruction); break;
+        case LB: _lb(instruction); break;
+        case LH: _lh(instruction); break;
+        case LBU: _lbu(instruction); break;
+        case LW: _lw(instruction); break;
+        case SB: _sb(instruction); break;
+        case SH: _sh(instruction); break;
+        case SW: _sw(instruction); break;
+        case ADDI: _addi(instruction); break;
+        case LHU: _lhu(instruction); break;
+        case LWL: _lwl(instruction); break;
+        case LWR: _lwr(instruction); break;
+        case J: _j(instruction); break;
+        case JAL: _jalr(instruction); break;
     }
 }
 
 uint32_t System::readMemoryWord(uint32_t address) {
+    if (address == ADDR_GETC) {
+        return static_cast<uint32_t>(getchar());
+    }
+
     uint32_t result = 0;
     for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
         result += readMemoryByte(address + i) << (8 * (WORD_SIZE_IN_BYTES - i - 1));
@@ -117,14 +69,25 @@ uint32_t System::readMemoryWord(uint32_t address) {
 }
 
 uint8_t System::readMemoryByte(uint32_t address) {
-    if (address < ADDR_INSTR || (address >= ADDR_PUTC && address < (ADDR_PUTC + 4))) {
-        cerr << "Attempted to read from an invalid or write-only memory address." << endl;
-        exit(ERROR_MEMORY_EXCEPTION);
+    if (address >= ADDR_INSTR && address < ADDR_DATA) {
+        return memory_instr[address - ADDR_INSTR];
     }
-    return memory[address];
+    if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
+        return memory_data[address - ADDR_DATA];
+    }
+    if (address >= ADDR_GETC && address < ADDR_GETC + 4) {
+        return static_cast<uint8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
+    }
+
+    cerr << "Attempted to read from an invalid or write-only memory address." << endl;
+    exit(ERROR_MEMORY_EXCEPTION);
 }
 
 uint16_t System::readMemoryHalfWord(uint32_t address) {
+    if (address >= ADDR_GETC && address < ADDR_GETC + 2) {
+        return static_cast<uint8_t>((getchar() >> ((1 - address + ADDR_GETC) * 16)) & MASK_HALF_WORD);
+    }
+
     uint16_t result = 0;
     for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
         result += readMemoryByte(address + i) << (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1));
@@ -133,6 +96,11 @@ uint16_t System::readMemoryHalfWord(uint32_t address) {
 }
 
 void System::writeMemoryWord(uint32_t address, uint32_t word) {
+    if (address == ADDR_PUTC) {
+        putchar(word);
+        return;
+    }
+
     for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
         auto byte = static_cast<uint8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
         writeMemoryByte(address + i, byte);
@@ -140,14 +108,25 @@ void System::writeMemoryWord(uint32_t address, uint32_t word) {
 }
 
 void System::writeMemoryByte(uint32_t address, uint8_t byte) {
-    if (address < ADDR_INSTR || (address >= ADDR_GETC && address < (ADDR_GETC + 4))) {
-        cerr << "Attempted to write to an invalid or read-only memory address." << endl;
-        exit(ERROR_MEMORY_EXCEPTION);
+    if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
+        memory_data[address - ADDR_DATA] = byte;
+        return;
     }
-    memory[address] = byte;
+    if (address >= ADDR_PUTC && address < ADDR_PUTC + 4) {
+        putchar(byte << ((3 - address + ADDR_PUTC) * 8));
+        return;
+    }
+
+    cerr << "Attempted to write to an invalid or read-only memory address." << endl;
+    exit(ERROR_MEMORY_EXCEPTION);
 }
 
 void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
+    if (address >= ADDR_PUTC && address < ADDR_PUTC + 2) {
+        putchar(halfWord << ((1 - address + ADDR_PUTC) * 16));
+        return;
+    }
+
     for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
         auto byte = static_cast<uint8_t>(halfWord >> (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
         writeMemoryByte(address + i, byte);
@@ -176,75 +155,29 @@ uint8_t System::getExitCode() {
 
 void System::executeRTypeInstruction(Instruction *instruction) {
     switch (instruction->getFunctionCode()) {
-        case SLL:
-            _sll(instruction);
-            break;
-        case SRL:
-            _srl(instruction);
-            break;
-        case SRA:
-            _sra(instruction);
-            break;
-        case ADD:
-            _add(instruction);
-            break;
-        case ADDU:
-            _addu(instruction);
-            break;
-        case SUB:
-            _sub(instruction);
-            break;
-        case SUBU:
-            _subu(instruction);
-            break;
-        case AND:
-            _and(instruction);
-            break;
-        case OR:
-            _or(instruction);
-            break;
-        case XOR:
-            _xor(instruction);
-            break;
-        case NOR:
-            _nor(instruction);
-            break;
-        case SLT:
-            _slt(instruction);
-            break;
-        case SLTU:
-            _sltu(instruction);
-            break;
-        case JR:
-            _jr(instruction);
-            break;
-        case JALR:
-            _jalr(instruction);
-            break;
-        case DIV:
-            _div(instruction);
-            break;
-        case DIVU:
-            _divu(instruction);
-            break;
-        case MFHI:
-            _mfhi(instruction);
-            break;
-        case MFLO:
-            _mflo(instruction);
-            break;
-        case MTHI:
-            _mthi(instruction);
-            break;
-        case MTLO:
-            _mtlo(instruction);
-            break;
-        case MULT:
-            _mult(instruction);
-            break;
-        case MULTU:
-            _multu(instruction);
-            break;
+        case SLL: _sll(instruction); break;
+        case SRL: _srl(instruction); break;
+        case SRA: _sra(instruction); break;
+        case ADD: _add(instruction); break;
+        case ADDU: _addu(instruction); break;
+        case SUB: _sub(instruction); break;
+        case SUBU: _subu(instruction); break;
+        case AND: _and(instruction); break;
+        case OR: _or(instruction); break;
+        case XOR: _xor(instruction); break;
+        case NOR: _nor(instruction); break;
+        case SLT: _slt(instruction); break;
+        case SLTU: _sltu(instruction); break;
+        case JR: _jr(instruction); break;
+        case JALR: _jalr(instruction); break;
+        case DIV: _div(instruction); break;
+        case DIVU: _divu(instruction); break;
+        case MFHI: _mfhi(instruction); break;
+        case MFLO: _mflo(instruction); break;
+        case MTHI: _mthi(instruction); break;
+        case MTLO: _mtlo(instruction); break;
+        case MULT: _mult(instruction); break;
+        case MULTU: _multu(instruction); break;
     }
 }
 
@@ -344,8 +277,8 @@ void System::_multu(Instruction *instruction) {
 }
 
 void System::_addiu(Instruction *instruction) {
-    uint32_t result = readRegister(instruction->getRegisterS())
-                    + instruction->getImmediateOperand();
+    uint32_t result = readRegister(instruction->getRegisterS()) +
+        instruction->getImmediateOperand();
     writeRegister(instruction->getRegisterT(), result);
 }
 
@@ -394,14 +327,14 @@ void System::_b_spec(Instruction *instruction) {
 }
 
 void System::_lb(Instruction *instruction) {
-    uint8_t byte = readMemoryByte( instruction->getImmediateOperand()
-                                   + instruction->getRegisterS());
+    uint8_t byte = readMemoryByte(instruction->getImmediateOperand() +
+        instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), byte);
 }
 
 void System::_lh(Instruction *instruction) {
-    uint16_t word = readMemoryHalfWord( instruction->getImmediateOperand()
-                                        + instruction->getRegisterS());
+    uint16_t word = readMemoryHalfWord(instruction->getImmediateOperand() +
+        instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), word);
 }
 
@@ -410,8 +343,8 @@ void System::_lbu(Instruction *instruction) {
 }
 
 void System::_lw(Instruction *instruction) {
-    uint32_t word = readMemoryWord( instruction->getImmediateOperand()
-                                    + instruction->getRegisterS());
+    uint32_t word = readMemoryWord(instruction->getImmediateOperand() +
+        instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), word);
 }
 

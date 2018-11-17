@@ -7,7 +7,8 @@ using namespace std;
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#define MEMORY_SIZE_BYTES 4294967296
+#define MEMORY_INSTR_SIZE 0x1000000
+#define MEMORY_DATA_SIZE 0x4000000
 #define REGISTERS_SIZE 32
 
 #define ADDR_NULL 0x0
@@ -22,7 +23,8 @@ private:
     uint32_t hi = 0;
     uint32_t lo = 0;
     uint32_t registers[REGISTERS_SIZE] = {0};
-    uint8_t memory[MEMORY_SIZE_BYTES] = {0};
+    uint8_t memory_instr[MEMORY_INSTR_SIZE] = {0};
+    uint8_t memory_data[MEMORY_DATA_SIZE] = {0};
 
     // I-Type functions
     void _addiu(Instruction *instruction);
@@ -82,7 +84,7 @@ private:
 public:
     System(){};
     void start();
-    void setMemoryFromStream(ifstream *stream);
+    void loadInstructionsFromStream(ifstream *stream);
     void executeInstruction(Instruction *instruction);
     void executeRTypeInstruction(Instruction *instruction);
 

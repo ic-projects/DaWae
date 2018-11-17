@@ -5,7 +5,7 @@ import time
 count = 0
 passCount = 0
 for test in os.listdir('bin'):
-    p = Popen(['../bin/simulator', 'bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+    p = Popen(['../bin/mips_simulator', 'bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
     while p.poll() is None:
         time.sleep(0.1)
     exitCode = p.returncode
