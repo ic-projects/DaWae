@@ -57,6 +57,11 @@ void System::executeInstruction(Instruction *instruction) {
 }
 
 uint32_t System::readMemoryWord(uint32_t address) {
+    if (address % WORD_SIZE_IN_BYTES != 0) {
+        cerr << "Attempted to read a word on a non aligned memory address." << endl;
+        exit(ERROR_MEMORY_EXCEPTION);
+    }
+
     if (address == ADDR_GETC) {
         return static_cast<uint32_t>(getchar());
     }
@@ -79,11 +84,16 @@ uint8_t System::readMemoryByte(uint32_t address) {
         return static_cast<uint8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
     }
 
-    cerr << "Attempted to read from an invalid or write-only memory address." << endl;
+    cerr << "Attempted to read a byte from an invalid or write-only memory address." << endl;
     exit(ERROR_MEMORY_EXCEPTION);
 }
 
 uint16_t System::readMemoryHalfWord(uint32_t address) {
+    if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
+        cerr << "Attempted to read a half word on a non aligned memory address." << endl;
+        exit(ERROR_MEMORY_EXCEPTION);
+    }
+
     if (address >= ADDR_GETC && address < ADDR_GETC + 2) {
         return static_cast<uint8_t>((getchar() >> ((1 - address + ADDR_GETC) * 16)) & MASK_HALF_WORD);
     }
@@ -96,6 +106,11 @@ uint16_t System::readMemoryHalfWord(uint32_t address) {
 }
 
 void System::writeMemoryWord(uint32_t address, uint32_t word) {
+    if (address % WORD_SIZE_IN_BYTES != 0) {
+        cerr << "Attempted to write a word on a non aligned memory address." << endl;
+        exit(ERROR_MEMORY_EXCEPTION);
+    }
+
     if (address == ADDR_PUTC) {
         putchar(word);
         return;
@@ -122,6 +137,11 @@ void System::writeMemoryByte(uint32_t address, uint8_t byte) {
 }
 
 void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
+    if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
+        cerr << "Attempted to write a half word on a non aligned memory address." << endl;
+        exit(ERROR_MEMORY_EXCEPTION);
+    }
+
     if (address >= ADDR_PUTC && address < ADDR_PUTC + 2) {
         putchar(halfWord << ((1 - address + ADDR_PUTC) * 16));
         return;
@@ -277,8 +297,8 @@ void System::_multu(Instruction *instruction) {
 }
 
 void System::_addiu(Instruction *instruction) {
-    uint32_t result = readRegister(instruction->getRegisterS()) +
-        instruction->getImmediateOperand();
+    uint32_t result = readRegister(instruction->getRegisterS())
+                    + instruction->getImmediateOperand();
     writeRegister(instruction->getRegisterT(), result);
 }
 
@@ -327,14 +347,14 @@ void System::_b_spec(Instruction *instruction) {
 }
 
 void System::_lb(Instruction *instruction) {
-    uint8_t byte = readMemoryByte(instruction->getImmediateOperand() +
-        instruction->getRegisterS());
+    uint8_t byte = readMemoryByte(instruction->getImmediateOperand()
+                 + instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), byte);
 }
 
 void System::_lh(Instruction *instruction) {
-    uint16_t word = readMemoryHalfWord(instruction->getImmediateOperand() +
-        instruction->getRegisterS());
+    uint16_t word = readMemoryHalfWord(instruction->getImmediateOperand()
+                  + instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), word);
 }
 
@@ -343,8 +363,8 @@ void System::_lbu(Instruction *instruction) {
 }
 
 void System::_lw(Instruction *instruction) {
-    uint32_t word = readMemoryWord(instruction->getImmediateOperand() +
-        instruction->getRegisterS());
+    uint32_t word = readMemoryWord(instruction->getImmediateOperand()
+                  + instruction->getRegisterS());
     writeRegister(instruction->getRegisterT(), word);
 }
 

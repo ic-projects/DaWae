@@ -13,11 +13,14 @@ for test in os.listdir('bin'):
     testName = test.strip('.bin')
     expectedExitCode = int(open('output/' + testName + '.txt', 'r').readline())
 
+    # Checking exit code
     if exitCode == expectedExitCode:
         print('{}: {} - PASS'.format(count, testName))
         passCount += 1
     else:
         print('{}: {} - FAIL (expected: {}, received: {})'.format(count, testName, expectedExitCode, exitCode))
+
+    # Checking std::out
 
     count += 1
 
