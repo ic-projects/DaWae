@@ -18,7 +18,7 @@ MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check
 	$(MIPS_CC) $(MIPS_CPPFLAGS) -c $< -o $@
 
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
-%.mips.o: %.s
+%.mips.o: test/src/%.s
 	$(MIPS_CC) $(MIPS_CPPFLAGS) -c $< -o $@
 
 # Link MIPS object file (.o), producing .elf, using memory locations specified in spec
@@ -26,7 +26,7 @@ MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check
 	$(MIPS_CC) $(MIPS_CPPFLAGS) $(MIPS_LDFLAGS) -T linker.ld $< -o $@
 
 # Extract binary instructions only from linked object file (.elf)
-%.mips.bin: %.mips.elf
+test/bin/%.mips.bin: %.mips.elf
 	$(MIPS_OBJCOPY) -O binary --only-section=.text $< $@
 
 # Disassemble linked object file (.elf), pulling out instructions as MIPS assembly file (.s)

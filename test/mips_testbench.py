@@ -2,6 +2,12 @@ from subprocess import Popen, PIPE
 import os
 import time
 
+#Compile assembly test files into binary
+os.system('mkdir bin')
+for test in os.listdir('src'):
+    testName = test.strip('.s')
+    os.system('make test/bin/{}.mips.bin -C ../'.format(testName))
+
 count = 0
 passCount = 0
 for test in os.listdir('bin'):
