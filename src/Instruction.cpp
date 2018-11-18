@@ -41,3 +41,7 @@ uint16_t Instruction::getImmediateOperand() {
 uint32_t Instruction::getJumpAddress() {
     return instruction & MASK_JUMP_ADDRESS;
 }
+
+uint32_t Instruction::getRaw() {
+    return instruction;
+}

@@ -104,6 +104,7 @@ public:
     uint16_t getImmediateOperand();
     uint32_t getJumpAddress();
     void printRaw();
+    uint32_t getRaw();
 };
 
 #endif

@@ -5,16 +5,27 @@
 #include "Errors.h"
 
 void System::start() {
+    bool hasStarted = false;
     while (pc != ADDR_NULL) {
-        uint32_t raw = readMemoryWord(pc);
-
-        // Check for zero instruction
-        if (raw == 0) {
-            exit(getExitCode());
+        // Execute
+        if (decodedInstruction != nullptr) {
+            // Check for zero instruction
+            if (decodedInstruction->getRaw() == 0) {
+                exit(getExitCode());
+            }
+            executeInstruction(decodedInstruction);
         }
 
-        auto *instruction = new Instruction(raw);
-        executeInstruction(instruction);
+        // Decode
+        if (hasStarted) {
+            decodedInstruction = new Instruction(fetchedInstruction);
+        } else {
+            hasStarted = true;
+        }
+
+        // Fetch
+        fetchedInstruction = readMemoryWord(pc);
+
         pc += WORD_SIZE_IN_BYTES;
     }
     exit(getExitCode());
@@ -22,7 +33,7 @@ void System::start() {
 
 void System::loadInstructionsFromStream(ifstream *stream) {
     // Read stream into memory starting at ADDR_INSTR
-    stream->read((char *) memory_instr, MEMORY_INSTR_SIZE);
+    stream->read((char *) memoryInstr, MEMORY_INSTR_SIZE);
 }
 
 void System::executeInstruction(Instruction *instruction) {
@@ -75,10 +86,10 @@ uint32_t System::readMemoryWord(uint32_t address) {
 
 uint8_t System::readMemoryByte(uint32_t address) {
     if (address >= ADDR_INSTR && address < ADDR_DATA) {
-        return memory_instr[address - ADDR_INSTR];
+        return memoryInstr[address - ADDR_INSTR];
     }
     if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
-        return memory_data[address - ADDR_DATA];
+        return memoryData[address - ADDR_DATA];
     }
     if (address >= ADDR_GETC && address < ADDR_GETC + 4) {
         return static_cast<uint8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
@@ -124,7 +135,7 @@ void System::writeMemoryWord(uint32_t address, uint32_t word) {
 
 void System::writeMemoryByte(uint32_t address, uint8_t byte) {
     if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
-        memory_data[address - ADDR_DATA] = byte;
+        memoryData[address - ADDR_DATA] = byte;
         return;
     }
     if (address >= ADDR_PUTC && address < ADDR_PUTC + 4) {
