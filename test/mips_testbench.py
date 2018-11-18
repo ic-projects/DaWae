@@ -15,18 +15,31 @@ for test in os.listdir('bin'):
     while p.poll() is None:
         time.sleep(0.1)
     exitCode = p.returncode
+    output = p.communicate()[0]
 
     testName = test.strip('.bin')
-    expectedExitCode = int(open('./output/' + testName + '.txt', 'r').readline())
+    expectedExitCode = int(open('./output/' + testName + '.exit', 'r').readline())
+    expectedOut = open('./output/' + testName + '.out', 'r').read()
+
+    exitCodePass = False
+    outputPass = False
 
     # Checking exit code
     if exitCode == expectedExitCode:
-        print('{}: {} - PASS'.format(count, testName))
-        passCount += 1
+        print('{}: {} - Exit Code - PASS'.format(count, testName))
+        exitCodePass = True
     else:
-        print('{}: {} - FAIL (expected: {}, received: {})'.format(count, testName, expectedExitCode, exitCode))
+        print('{}: {} - Exit Code - FAIL (expected: {}, received: {})'.format(count, testName, expectedExitCode, exitCode))
 
     # Checking std::out
+    if output == expectedOut:
+        print('{}: {} - Output - PASS'.format(count, testName))
+        outputPass = True
+    else:
+        print('{}: {} - Output - FAIL (expected: {}, received: {})'.format(count, testName, expectedOut, output))
+
+    if exitCodePass and outputPass:
+        passCount += 1
 
     count += 1
 
