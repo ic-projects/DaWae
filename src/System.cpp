@@ -381,7 +381,9 @@ void System::_sw(Instruction *instruction) {
 }
 
 void System::_addi(Instruction *instruction) {
-
+    uint32_t result = readRegister(instruction->getRegisterS())
+                    + instruction->getImmediateOperand();
+    writeRegister(instruction->getRegisterT(), result);
 }
 
 void System::_lhu(Instruction *instruction) {

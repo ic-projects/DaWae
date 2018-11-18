@@ -2,7 +2,7 @@ from subprocess import Popen, PIPE
 import os
 import time
 
-#Compile assembly test files into binary
+# Compile assembly test files into binary
 os.system('mkdir bin')
 for test in os.listdir('src'):
     testName = test.strip('.s')
@@ -17,7 +17,7 @@ for test in os.listdir('bin'):
     exitCode = p.returncode
 
     testName = test.strip('.bin')
-    expectedExitCode = int(open('output/' + testName + '.txt', 'r').readline())
+    expectedExitCode = int(open('./output/' + testName + '.txt', 'r').readline())
 
     # Checking exit code
     if exitCode == expectedExitCode:
