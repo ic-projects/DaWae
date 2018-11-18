@@ -326,7 +326,8 @@ void System::_andi(Instruction *instruction) {
 }
 
 void System::_ori(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterT(),
+                  readRegister(instruction->getRegisterS()) | instruction->getImmediateOperand());
 }
 
 void System::_xori(Instruction *instruction) {
@@ -334,7 +335,8 @@ void System::_xori(Instruction *instruction) {
 }
 
 void System::_lui(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterT(),
+                  instruction->getImmediateOperand() << 16);
 }
 
 void System::_beq(Instruction *instruction) {
@@ -388,7 +390,8 @@ void System::_sh(Instruction *instruction) {
 }
 
 void System::_sw(Instruction *instruction) {
-
+    writeMemoryWord(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
+                    readRegister(instruction->getRegisterT()));
 }
 
 void System::_addi(Instruction *instruction) {
