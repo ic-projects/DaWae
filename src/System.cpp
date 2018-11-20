@@ -68,7 +68,7 @@ void System::executeInstruction(Instruction *instruction) {
     }
 }
 
-int32_t System::readMemoryWord(int32_t address) {
+uint32_t System::readMemoryWord(uint32_t address) {
     if (address % WORD_SIZE_IN_BYTES != 0) {
         cerr << "Attempted to read a word on a non aligned memory address." << endl;
         exit(ERROR_CPU_EXCEPTION);
@@ -85,7 +85,7 @@ int32_t System::readMemoryWord(int32_t address) {
     return result;
 }
 
-int8_t System::readMemoryByte(int32_t address) {
+uint8_t System::readMemoryByte(uint32_t address) {
     if (address >= ADDR_INSTR && address < ADDR_DATA) {
         return memoryInstr[address - ADDR_INSTR];
     }
@@ -100,7 +100,7 @@ int8_t System::readMemoryByte(int32_t address) {
     exit(ERROR_CPU_EXCEPTION);
 }
 
-int16_t System::readMemoryHalfWord(int32_t address) {
+uint16_t System::readMemoryHalfWord(uint32_t address) {
     if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
         cerr << "Attempted to read a half word on a non aligned memory address." << endl;
         exit(ERROR_CPU_EXCEPTION);
@@ -117,7 +117,7 @@ int16_t System::readMemoryHalfWord(int32_t address) {
     return result;
 }
 
-void System::writeMemoryWord(int32_t address, int32_t word) {
+void System::writeMemoryWord(uint32_t address, uint32_t word) {
     if (address % WORD_SIZE_IN_BYTES != 0) {
         cerr << "Attempted to write a word on a non aligned memory address." << endl;
         exit(ERROR_CPU_EXCEPTION);
@@ -134,7 +134,7 @@ void System::writeMemoryWord(int32_t address, int32_t word) {
     }
 }
 
-void System::writeMemoryByte(int32_t address, int8_t byte) {
+void System::writeMemoryByte(uint32_t address, uint8_t byte) {
     if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
         memoryData[address - ADDR_DATA] = byte;
         return;
@@ -148,7 +148,7 @@ void System::writeMemoryByte(int32_t address, int8_t byte) {
     exit(ERROR_CPU_EXCEPTION);
 }
 
-void System::writeMemoryHalfWord(int32_t address, int16_t halfWord) {
+void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
     if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
         cerr << "Attempted to write a half word on a non aligned memory address." << endl;
         exit(ERROR_CPU_EXCEPTION);
@@ -165,7 +165,7 @@ void System::writeMemoryHalfWord(int32_t address, int16_t halfWord) {
     }
 }
 
-int32_t System::readRegister(int8_t reg) {
+uint32_t System::readRegister(uint8_t reg) {
     if (reg < REGISTERS_SIZE) {
         return registers[reg];
     }
@@ -173,7 +173,7 @@ int32_t System::readRegister(int8_t reg) {
     exit(ERROR_INVALID_INSTRUCTION);
 }
 
-void System::writeRegister(int8_t reg, int32_t word) {
+void System::writeRegister(uint8_t reg, uint32_t word) {
     if (reg >= REGISTERS_SIZE) {
         cerr << "Attempted to write to an invalid register." << endl;
         exit(ERROR_INVALID_INSTRUCTION);
@@ -181,8 +181,8 @@ void System::writeRegister(int8_t reg, int32_t word) {
     registers[reg] = word;
 }
 
-int8_t System::getExitCode() {
-    return static_cast<int8_t>(readRegister(2) & MASK_BYTE);
+uint8_t System::getExitCode() {
+    return static_cast<uint8_t>(readRegister(2) & MASK_BYTE);
 }
 
 void System::executeRTypeInstruction(Instruction *instruction) {
@@ -227,14 +227,14 @@ void System::_sra(Instruction *instruction) {
 }
 
 void System::_add(Instruction *instruction) {
-    int64_t result = readRegister(instruction->getRegisterS()) +
-                     readRegister(instruction->getRegisterT());
+    int64_t result = ((int64_t) readRegister(instruction->getRegisterS())) +
+                     ((int64_t) readRegister(instruction->getRegisterT()));
 
     if (result > INT32_MAX || result < INT32_MIN) {
         exit(ERROR_ARITHMETIC);
     }
 
-    writeRegister(instruction->getRegisterD(), result);
+    writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(result));
 }
 
 void System::_addu(Instruction *instruction) {
