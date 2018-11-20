@@ -15,14 +15,14 @@ for test in os.listdir('bin'):
     while p.poll() is None:
         time.sleep(0.1)
     exitCode = p.returncode
-    output = p.communicate()[0]
+    output = p.communicate()[0].rstrip('\0')
 
     # Remove .bin file ending
     testName = test[:-4]
 
     with open('./output/' + testName + '.out', 'r') as f:
         #Mod exit code by 256 since exit code size is only 8 bits
-        expectedExitCode = int(f.readline())%256
+        expectedExitCode = int(f.readline()) % 256
         expectedOut = f.readline()
 
     exitCodePass = False
