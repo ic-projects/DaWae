@@ -226,13 +226,15 @@ void System::_sra(Instruction *instruction) {
 }
 
 void System::_add(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterS()) +
+                  readRegister(instruction->getRegisterT()));
 }
 
 void System::_addu(Instruction *instruction) {
-    uint32_t result = readRegister(instruction->getRegisterS())
-                    + readRegister(instruction->getRegisterT());
-    writeRegister(instruction->getRegisterD(), result);
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterS()) +
+                  readRegister(instruction->getRegisterT()));
 }
 
 void System::_sub(Instruction *instruction) {
@@ -244,7 +246,9 @@ void System::_subu(Instruction *instruction) {
 }
 
 void System::_and(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterS()) &
+                  readRegister(instruction->getRegisterT()));
 }
 
 void System::_or(Instruction *instruction) {
@@ -308,9 +312,9 @@ void System::_multu(Instruction *instruction) {
 }
 
 void System::_addiu(Instruction *instruction) {
-    uint32_t result = readRegister(instruction->getRegisterS())
-                    + instruction->getImmediateOperand();
-    writeRegister(instruction->getRegisterT(), result);
+    writeRegister(instruction->getRegisterT(),
+                  readRegister(instruction->getRegisterS()) +
+                  instruction->getImmediateOperand());
 }
 
 void System::_slti(Instruction *instruction) {
@@ -322,12 +326,15 @@ void System::_sltiu(Instruction *instruction) {
 }
 
 void System::_andi(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterT(),
+                  readRegister(instruction->getRegisterS()) &
+                  instruction->getImmediateOperand());
 }
 
 void System::_ori(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readRegister(instruction->getRegisterS()) | instruction->getImmediateOperand());
+                  readRegister(instruction->getRegisterS()) |
+                  instruction->getImmediateOperand());
 }
 
 void System::_xori(Instruction *instruction) {
@@ -360,15 +367,13 @@ void System::_b_spec(Instruction *instruction) {
 }
 
 void System::_lb(Instruction *instruction) {
-    uint8_t byte = readMemoryByte(instruction->getImmediateOperand()
-                 + instruction->getRegisterS());
-    writeRegister(instruction->getRegisterT(), byte);
+    writeRegister(instruction->getRegisterT(),
+                  readMemoryByte(instruction->getImmediateOperand() + instruction->getRegisterS()));
 }
 
 void System::_lh(Instruction *instruction) {
-    uint16_t word = readMemoryHalfWord(instruction->getImmediateOperand()
-                  + instruction->getRegisterS());
-    writeRegister(instruction->getRegisterT(), word);
+    writeRegister(instruction->getRegisterT(),
+                  readMemoryHalfWord(instruction->getImmediateOperand() + instruction->getRegisterS()));
 }
 
 void System::_lbu(Instruction *instruction) {
@@ -376,9 +381,8 @@ void System::_lbu(Instruction *instruction) {
 }
 
 void System::_lw(Instruction *instruction) {
-    uint32_t word = readMemoryWord(instruction->getImmediateOperand()
-                  + instruction->getRegisterS());
-    writeRegister(instruction->getRegisterT(), word);
+    writeRegister(instruction->getRegisterT(),
+                  readMemoryWord(instruction->getImmediateOperand() + instruction->getRegisterS()));
 }
 
 void System::_sb(Instruction *instruction) {
@@ -395,9 +399,9 @@ void System::_sw(Instruction *instruction) {
 }
 
 void System::_addi(Instruction *instruction) {
-    uint32_t result = readRegister(instruction->getRegisterS())
-                    + instruction->getImmediateOperand();
-    writeRegister(instruction->getRegisterT(), result);
+    writeRegister(instruction->getRegisterT(),
+                  readRegister(instruction->getRegisterS()) +
+                  instruction->getImmediateOperand());
 }
 
 void System::_lhu(Instruction *instruction) {
