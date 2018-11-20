@@ -264,7 +264,9 @@ void System::_or(Instruction *instruction) {
 }
 
 void System::_xor(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterS()) ^
+                  readRegister(instruction->getRegisterT()));
 }
 
 void System::_nor(Instruction *instruction) {
