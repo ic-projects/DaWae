@@ -17,7 +17,8 @@ for test in os.listdir('bin'):
     exitCode = p.returncode
     output = p.communicate()[0]
 
-    testName = test.strip('.bin')
+    # Remove .bin file ending
+    testName = test[:-4]
 
     with open('./output/' + testName + '.out', 'r') as f:
         expectedExitCode = int(f.readline())
