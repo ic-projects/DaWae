@@ -227,8 +227,8 @@ void System::_sra(Instruction *instruction) {
 }
 
 void System::_add(Instruction *instruction) {
-    int64_t result = ((int64_t) readRegister(instruction->getRegisterS())) +
-                     ((int64_t) readRegister(instruction->getRegisterT()));
+    int64_t result = static_cast<int64_t>(readRegister(instruction->getRegisterS())) +
+                     static_cast<int64_t>(readRegister(instruction->getRegisterT()));
 
     if (result > INT32_MAX || result < INT32_MIN) {
         exit(ERROR_ARITHMETIC);
@@ -405,9 +405,14 @@ void System::_sw(Instruction *instruction) {
 }
 
 void System::_addi(Instruction *instruction) {
-    writeRegister(instruction->getRegisterT(),
-                  readRegister(instruction->getRegisterS()) +
-                  instruction->getImmediateOperand());
+    int64_t result = static_cast<uint64_t>(readRegister(instruction->getRegisterS())) +
+                     static_cast<uint64_t>(instruction->getImmediateOperand());
+
+    if (result > INT32_MAX || result < INT32_MIN) {
+        exit(ERROR_ARITHMETIC);
+    }
+
+    writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(result));
 }
 
 void System::_lhu(Instruction *instruction) {
