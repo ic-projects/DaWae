@@ -270,7 +270,9 @@ void System::_xor(Instruction *instruction) {
 }
 
 void System::_nor(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterD(),
+                  ~(readRegister(instruction->getRegisterS()) |
+                    readRegister(instruction->getRegisterT())));
 }
 
 void System::_slt(Instruction *instruction) {
