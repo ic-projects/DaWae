@@ -20,13 +20,13 @@ using namespace std;
 class System {
 private:
     Instruction *decodedInstruction = nullptr;
-    uint32_t fetchedInstruction = 0;
-    uint32_t pc = ADDR_INSTR;
-    uint32_t hi = 0;
-    uint32_t lo = 0;
-    uint32_t registers[REGISTERS_SIZE] = {0};
-    uint8_t memoryInstr[MEMORY_INSTR_SIZE] = {0};
-    uint8_t memoryData[MEMORY_DATA_SIZE] = {0};
+    int32_t fetchedInstruction = 0;
+    int32_t pc = ADDR_INSTR;
+    int32_t hi = 0;
+    int32_t lo = 0;
+    int32_t registers[REGISTERS_SIZE] = {0};
+    int8_t memoryInstr[MEMORY_INSTR_SIZE] = {0};
+    int8_t memoryData[MEMORY_DATA_SIZE] = {0};
 
     // I-Type functions
     void _addiu(Instruction *instruction);
@@ -91,19 +91,19 @@ public:
     void executeRTypeInstruction(Instruction *instruction);
 
     // Memory
-    uint32_t readMemoryWord(uint32_t address);
-    uint16_t readMemoryHalfWord(uint32_t address);
-    uint8_t readMemoryByte(uint32_t address);
-    void writeMemoryWord(uint32_t address, uint32_t word);
-    void writeMemoryByte(uint32_t address, uint8_t byte);
-    void writeMemoryHalfWord(uint32_t address, uint16_t halfWord);
+    int32_t readMemoryWord(int32_t address);
+    int16_t readMemoryHalfWord(int32_t address);
+    int8_t readMemoryByte(int32_t address);
+    void writeMemoryWord(int32_t address, int32_t word);
+    void writeMemoryByte(int32_t address, int8_t byte);
+    void writeMemoryHalfWord(int32_t address, int16_t halfWord);
 
     // Registers
-    uint32_t readRegister(uint8_t reg);
-    void writeRegister(uint8_t reg, uint32_t word);
+    int32_t readRegister(int8_t reg);
+    void writeRegister(int8_t reg, int32_t word);
 
     // Get lower 8 bits of $2 register
-    uint8_t getExitCode();
+    int8_t getExitCode();
 };
 
 

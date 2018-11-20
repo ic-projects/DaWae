@@ -92,19 +92,19 @@ enum BTypeRegTCodes {
 
 class Instruction {
 private:
-    uint32_t instruction;
+    int32_t instruction;
 public:
-    explicit Instruction(uint32_t instruction) : instruction(instruction) {};
+    explicit Instruction(int32_t instruction) : instruction(instruction) {};
     InstructionOpcode getOpcode();
-    uint8_t getRegisterS();
-    uint8_t getRegisterT();
-    uint8_t getRegisterD();
-    uint8_t getShiftAmount();
+    int8_t getRegisterS();
+    int8_t getRegisterT();
+    int8_t getRegisterD();
+    int8_t getShiftAmount();
     RTypeFunctionCode getFunctionCode();
-    uint16_t getImmediateOperand();
-    uint32_t getJumpAddress();
+    int16_t getImmediateOperand();
+    int32_t getJumpAddress();
     void printRaw();
-    uint32_t getRaw();
+    int32_t getRaw();
 };
 
 #endif
