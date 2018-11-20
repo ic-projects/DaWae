@@ -18,8 +18,10 @@ for test in os.listdir('bin'):
     output = p.communicate()[0]
 
     testName = test.strip('.bin')
-    expectedExitCode = int(open('./output/' + testName + '.exit', 'r').readline())
-    expectedOut = open('./output/' + testName + '.out', 'r').read()
+
+    with open('./output/' + testName + '.out', 'r') as f:
+        expectedExitCode = int(f.readline())
+        expectedOut = f.readline()
 
     exitCodePass = False
     outputPass = False
@@ -33,7 +35,7 @@ for test in os.listdir('bin'):
 
     # Checking std::out
     if output == expectedOut:
-        print('{}: {} - Output - PASS'.format(count, testName))
+        print('{}: {} - Output    - PASS'.format(count, testName))
         outputPass = True
     else:
         print('{}: {} - Output - FAIL (expected: {}, received: {})'.format(count, testName, expectedOut, output))
