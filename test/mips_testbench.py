@@ -21,12 +21,12 @@ for test in os.listdir('bin'):
     testName = test[:-4]
 
     with open('./output/' + testName + '.out', 'r') as f:
-        expectedExitCode = int(f.readline())
+        #Mod exit code by 256 since exit code size is only 8 bits
+        expectedExitCode = int(f.readline())%256
         expectedOut = f.readline()
 
     exitCodePass = False
     outputPass = False
-
     # Checking exit code
     if exitCode == expectedExitCode:
         print('{}: {} - Exit Code - PASS'.format(count, testName))
