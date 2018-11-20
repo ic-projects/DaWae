@@ -75,11 +75,11 @@ uint32_t System::readMemoryWord(uint32_t address) {
     }
 
     if (address == ADDR_GETC) {
-        return static_cast<int32_t>(getchar());
+        return static_cast<uint32_t>(getchar());
     }
 
-    int32_t result = 0;
-    for (int8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
+    uint32_t result = 0;
+    for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
         result += readMemoryByte(address + i) << (8 * (WORD_SIZE_IN_BYTES - i - 1));
     }
     return result;
@@ -93,7 +93,7 @@ uint8_t System::readMemoryByte(uint32_t address) {
         return memoryData[address - ADDR_DATA];
     }
     if (address >= ADDR_GETC && address < ADDR_GETC + 4) {
-        return static_cast<int8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
+        return static_cast<uint8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
     }
 
     cerr << "Attempted to read a byte from an invalid or write-only memory address." << endl;
@@ -107,11 +107,11 @@ uint16_t System::readMemoryHalfWord(uint32_t address) {
     }
 
     if (address >= ADDR_GETC && address < ADDR_GETC + 2) {
-        return static_cast<int8_t>((getchar() >> ((1 - address + ADDR_GETC) * 16)) & MASK_HALF_WORD);
+        return static_cast<uint8_t>((getchar() >> ((1 - address + ADDR_GETC) * 16)) & MASK_HALF_WORD);
     }
 
-    int16_t result = 0;
-    for (int8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
+    uint16_t result = 0;
+    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
         result += readMemoryByte(address + i) << (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1));
     }
     return result;
@@ -128,8 +128,8 @@ void System::writeMemoryWord(uint32_t address, uint32_t word) {
         return;
     }
 
-    for (int8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
-        auto byte = static_cast<int8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
+    for (uint8_t i = 0; i < WORD_SIZE_IN_BYTES; i++) {
+        auto byte = static_cast<uint8_t>(word >> (8 * (WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
         writeMemoryByte(address + i, byte);
     }
 }
@@ -159,8 +159,8 @@ void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
         return;
     }
 
-    for (int8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
-        auto byte = static_cast<int8_t>(halfWord >> (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
+    for (uint8_t i = 0; i < HALF_WORD_SIZE_IN_BYTES; i++) {
+        auto byte = static_cast<uint8_t>(halfWord >> (8 * (HALF_WORD_SIZE_IN_BYTES - i - 1)) & MASK_BYTE);
         writeMemoryByte(address + i, byte);
     }
 }
@@ -227,14 +227,15 @@ void System::_sra(Instruction *instruction) {
 }
 
 void System::_add(Instruction *instruction) {
-    int64_t result = static_cast<int64_t>(readRegister(instruction->getRegisterS())) +
-                     static_cast<int64_t>(readRegister(instruction->getRegisterT()));
+    auto s = static_cast<int32_t>(readRegister(instruction->getRegisterS()));
+    auto t = static_cast<int32_t>(readRegister(instruction->getRegisterT()));
 
-    if (result > INT32_MAX || result < INT32_MIN) {
+    if ((t > 0 && s > INT32_MAX - t) ||
+        (t < 0 && s < INT32_MIN - t)) {
         exit(ERROR_ARITHMETIC);
     }
 
-    writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(result));
+    writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s + t));
 }
 
 void System::_addu(Instruction *instruction) {
@@ -244,11 +245,20 @@ void System::_addu(Instruction *instruction) {
 }
 
 void System::_sub(Instruction *instruction) {
+    auto s = static_cast<int32_t>(readRegister(instruction->getRegisterS()));
+    auto t = static_cast<int32_t>(readRegister(instruction->getRegisterT()));
 
+    if ((t < 0 && s > INT32_MAX + t) ||
+        (t > 0 && s < INT32_MIN + t)) {
+        exit(ERROR_ARITHMETIC);
+    }
+
+    writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s - t));
 }
 
 void System::_subu(Instruction *instruction) {
-
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterS()) - readRegister(instruction->getRegisterT()));
 }
 
 void System::_and(Instruction *instruction) {
@@ -394,7 +404,7 @@ void System::_lbu(Instruction *instruction) {
 
 void System::_lw(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryWord(instruction->getImmediateOperand() + instruction->getRegisterS()));
+                  readMemoryWord(instruction->getImmediateOperand() + readRegister(instruction->getRegisterS())));
 }
 
 void System::_sb(Instruction *instruction) {
@@ -411,14 +421,15 @@ void System::_sw(Instruction *instruction) {
 }
 
 void System::_addi(Instruction *instruction) {
-    int64_t result = static_cast<uint64_t>(readRegister(instruction->getRegisterS())) +
-                     static_cast<uint64_t>(instruction->getImmediateOperand());
+    auto s = static_cast<int32_t>(readRegister(instruction->getRegisterS()));
+    auto imm = static_cast<int16_t>(instruction->getImmediateOperand());
 
-    if (result > INT32_MAX || result < INT32_MIN) {
+    if ((imm > 0 && s > INT32_MAX - imm) ||
+        (imm < 0 && s < INT32_MIN - imm)) {
         exit(ERROR_ARITHMETIC);
     }
 
-    writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(result));
+    writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(s + imm));
 }
 
 void System::_lhu(Instruction *instruction) {
