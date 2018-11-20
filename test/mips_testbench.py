@@ -17,29 +17,35 @@ for test in os.listdir('bin'):
     exitCode = p.returncode
     output = p.communicate()[0].rstrip('\0')
 
-    # Remove .bin file ending
-    testName = test[:-4]
+    # Remove .mips.bin file ending
+    testName = test[:-9]
 
-    with open('./output/' + testName + '.out', 'r') as f:
+    with open('./output/' + testName + '.mips.out', 'r') as f:
         #Mod exit code by 256 since exit code size is only 8 bits
         expectedExitCode = int(f.readline()) % 256
         expectedOut = f.readline()
+
+    # Get test description
+    descComment = open('./src/{}.s'.format(testName), 'r').readline()
+    comment = descComment.strip('# \n')
+
+    print('{}: {} - {} '.format(count, testName, comment))
 
     exitCodePass = False
     outputPass = False
     # Checking exit code
     if exitCode == expectedExitCode:
-        print('{}: {} - Exit Code - PASS'.format(count, testName))
+        print('Exit Code - PASS')
         exitCodePass = True
     else:
-        print('{}: {} - Exit Code - FAIL (expected: {}, received: {})'.format(count, testName, expectedExitCode, exitCode))
+        print('Exit Code - FAIL (expected: {}, received: {})'.format(expectedExitCode, exitCode))
 
     # Checking std::out
     if output == expectedOut:
-        print('{}: {} - Output    - PASS'.format(count, testName))
+        print('Output    - PASS')
         outputPass = True
     else:
-        print('{}: {} - Output - FAIL (expected: {}, received: {})'.format(count, testName, expectedOut, output))
+        print('Output - FAIL (expected: {}, received: {})'.format(expectedOut, output))
 
     if exitCodePass and outputPass:
         passCount += 1
