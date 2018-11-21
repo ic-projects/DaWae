@@ -210,6 +210,9 @@ void System::executeRTypeInstruction(Instruction *instruction) {
 
 // R-Type Instructions
 void System::_sll(Instruction *instruction) {
+    writeRegister(readRegister(instruction->getRegisterD()),
+                  readRegister(instruction->getRegisterT() <<
+                  instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
