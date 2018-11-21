@@ -22,6 +22,8 @@ private:
     Instruction *decodedInstruction = nullptr;
     uint32_t fetchedInstruction = 0;
     uint32_t pc = ADDR_INSTR;
+    bool hasStarted = false;
+
     uint32_t hi = 0;
     uint32_t lo = 0;
     uint32_t registers[REGISTERS_SIZE] = {0};

@@ -6,14 +6,9 @@
 #include <limits>
 
 void System::start() {
-    bool hasStarted = false;
     while (pc != ADDR_NULL) {
         // Execute
         if (decodedInstruction != nullptr) {
-            // Check for zero instruction
-            if (decodedInstruction->getRaw() == 0) {
-                exit(getExitCode());
-            }
             executeInstruction(decodedInstruction);
         }
 
@@ -25,9 +20,9 @@ void System::start() {
         }
 
         // Fetch
-        fetchedInstruction = readMemoryWord(pc);
-
-        pc += WORD_SIZE_IN_BYTES;
+        if (pc != ADDR_NULL) {
+            fetchedInstruction = readMemoryWord(pc);
+        }
     }
     exit(getExitCode());
 }
@@ -215,15 +210,15 @@ void System::executeRTypeInstruction(Instruction *instruction) {
 
 // R-Type Instructions
 void System::_sll(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srl(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sra(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_add(Instruction *instruction) {
@@ -236,12 +231,14 @@ void System::_add(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s + t));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_addu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) +
                   readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sub(Instruction *instruction) {
@@ -254,170 +251,189 @@ void System::_sub(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s - t));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_subu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) - readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_and(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) &
                   readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_or(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) |
                   readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_xor(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) ^
                   readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_nor(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   ~(readRegister(instruction->getRegisterS()) |
                     readRegister(instruction->getRegisterT())));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_slt(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sltu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_jr(Instruction *instruction) {
-
+    pc = readRegister(instruction->getRegisterS());
 }
 
 void System::_jalr(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_div(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_divu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mfhi(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mflo(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mthi(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mtlo(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mult(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_multu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_addiu(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) +
                   instruction->getImmediateOperand());
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_slti(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sltiu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_andi(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) &
                   instruction->getImmediateOperand());
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_ori(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) |
                   instruction->getImmediateOperand());
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_xori(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lui(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   instruction->getImmediateOperand() << 16);
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_beq(Instruction *instruction) {
-
+    if (readRegister(instruction->getRegisterS()) ==
+        readRegister(instruction->getRegisterT())) {
+        pc += static_cast<uint16_t>(instruction->getImmediateOperand()) << 2;
+    } else {
+        pc += WORD_SIZE_IN_BYTES;
+    }
 }
 
 void System::_bne(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_blez(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_bgtz(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_b_spec(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lb(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryByte(instruction->getImmediateOperand() + instruction->getRegisterS()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lh(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryHalfWord(instruction->getImmediateOperand() + instruction->getRegisterS()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lbu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lw(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryWord(instruction->getImmediateOperand() + readRegister(instruction->getRegisterS())));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sb(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sh(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sw(Instruction *instruction) {
     writeMemoryWord(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
                     readRegister(instruction->getRegisterT()));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_addi(Instruction *instruction) {
@@ -430,36 +446,37 @@ void System::_addi(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(s + imm));
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lhu(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lwl(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lwr(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sllv(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srav(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srlv(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_j(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_jal(Instruction *instruction) {
-
+    pc += WORD_SIZE_IN_BYTES;
 }
