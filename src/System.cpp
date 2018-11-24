@@ -176,6 +176,13 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
     registers[reg] = word;
 }
 
+void System::writeHIRegister(uint32_t word) {
+    hi = word;
+}
+void System::writeLORegister(uint32_t word) {
+    lo = word;
+}
+
 uint8_t System::getExitCode() {
     return static_cast<uint8_t>(readRegister(2) & MASK_BYTE);
 }
@@ -338,6 +345,10 @@ void System::_mtlo(Instruction *instruction) {
 }
 
 void System::_mult(Instruction *instruction) {
+    uint64_t result = readRegister(instruction->getRegisterS()) *
+                      readRegister(instruction->getRegisterT());
+    writeHIRegister((uint32_t) ((result & 0xFFFFFFFF00000000) >> 32));
+    writeLORegister((uint32_t) (result & 0xFFFFFFFF));
     pc += WORD_SIZE_IN_BYTES;
 }
 

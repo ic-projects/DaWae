@@ -103,6 +103,8 @@ public:
     // Registers
     uint32_t readRegister(uint8_t reg);
     void writeRegister(uint8_t reg, uint32_t word);
+    void writeHIRegister(uint32_t word);
+    void writeLORegister(uint32_t word);
 
     // Get lower 8 bits of $2 register
     uint8_t getExitCode();
