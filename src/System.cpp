@@ -217,6 +217,9 @@ void System::_sll(Instruction *instruction) {
 }
 
 void System::_srl(Instruction *instruction) {
+    writeRegister(readRegister(instruction->getRegisterD()),
+                  readRegister(instruction->getRegisterT() >>
+                  instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
