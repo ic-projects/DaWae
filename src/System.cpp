@@ -217,21 +217,21 @@ void System::executeRTypeInstruction(Instruction *instruction) {
 
 // R-Type Instructions
 void System::_sll(Instruction *instruction) {
-    writeRegister(readRegister(instruction->getRegisterD()),
+    writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterT() <<
                   instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srl(Instruction *instruction) {
-    writeRegister(readRegister(instruction->getRegisterD()),
+    writeRegister(instruction->getRegisterD(),
                   (uint32_t)readRegister(instruction->getRegisterT() >>
                   instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sra(Instruction *instruction) {
-    writeRegister(readRegister(instruction->getRegisterD()),
+    writeRegister(instruction->getRegisterD(),
                   (int32_t)readRegister(instruction->getRegisterT() >>
                   instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
@@ -305,14 +305,14 @@ void System::_nor(Instruction *instruction) {
 }
 
 void System::_slt(Instruction *instruction) {
-    writeRegister(readRegister(instruction->getRegisterD()),
+    writeRegister(instruction->getRegisterD(),
                   (int32_t) readRegister(instruction->getRegisterS()) <
                   (int32_t) readRegister(instruction->getRegisterT());
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sltu(Instruction *instruction) {
-    writeRegister(readRegister(instruction->getRegisterD()),
+    writeRegister(instruction->getRegisterD(),
                   (uint32_t) readRegister(instruction->getRegisterS()) <
                   (uint32_t) readRegister(instruction->getRegisterT());
     pc += WORD_SIZE_IN_BYTES;
@@ -374,6 +374,9 @@ void System::_addiu(Instruction *instruction) {
 }
 
 void System::_slti(Instruction *instruction) {
+    writeRegister(instruction->getRegisterT(),
+                  (int32_t) readRegister(instruction->getRegisterS()) <
+                  (int16_t) instruction->getImmediateOperand());
     pc += WORD_SIZE_IN_BYTES;
 }
 
