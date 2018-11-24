@@ -381,6 +381,9 @@ void System::_slti(Instruction *instruction) {
 }
 
 void System::_sltiu(Instruction *instruction) {
+    writeRegister(instruction->getRegisterT(),
+                  (uint32_t) readRegister(instruction->getRegisterS()) <
+                  (uint16_t) instruction->getImmediateOperand());
     pc += WORD_SIZE_IN_BYTES;
 }
 
