@@ -430,6 +430,9 @@ void System::_ori(Instruction *instruction) {
 }
 
 void System::_xori(Instruction *instruction) {
+    writeRegister(instruction->getRegisterT(),
+                  readRegister(instruction->getRegisterS()) ^
+                  instruction->getImmediateOperand());
     pc += WORD_SIZE_IN_BYTES;
 }
 
