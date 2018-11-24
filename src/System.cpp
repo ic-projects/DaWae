@@ -327,10 +327,28 @@ void System::_jalr(Instruction *instruction) {
 }
 
 void System::_div(Instruction *instruction) {
+    int32_t denom = readRegister(instruction->getRegisterS());
+    int32_t num   = readRegister(instruction->getRegisterT());
+    if (denom == 0) {
+        pc += WORD_SIZE_IN_BYTES;
+        return;
+    }
+
+    writeHIRegister((int32_t) num / denom);
+    writeLORegister((int32_t) num % denom);
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_divu(Instruction *instruction) {
+    uint32_t denom = readRegister(instruction->getRegisterS());
+    uint32_t num   = readRegister(instruction->getRegisterT());
+    if (denom == 0) {
+        pc += WORD_SIZE_IN_BYTES;
+        return;
+    }
+
+    writeHIRegister(num / denom);
+    writeLORegister(num % denom);
     pc += WORD_SIZE_IN_BYTES;
 }
 
