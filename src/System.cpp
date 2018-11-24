@@ -305,6 +305,9 @@ void System::_nor(Instruction *instruction) {
 }
 
 void System::_slt(Instruction *instruction) {
+    writeRegister(readRegister(instruction->getRegisterD()),
+                  readRegister(instruction->getRegisterS()) <
+                  readRegister(instruction->getRegisterT());
     pc += WORD_SIZE_IN_BYTES;
 }
 
