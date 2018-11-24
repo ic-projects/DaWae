@@ -496,6 +496,8 @@ void System::_sb(Instruction *instruction) {
 }
 
 void System::_sh(Instruction *instruction) {
+    writeMemoryHalfWord(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
+                        (uint16_t) (readRegister(instruction->getRegisterT()) & 0xFFFF));
     pc += WORD_SIZE_IN_BYTES;
 }
 
