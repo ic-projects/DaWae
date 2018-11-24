@@ -345,14 +345,18 @@ void System::_mtlo(Instruction *instruction) {
 }
 
 void System::_mult(Instruction *instruction) {
-    uint64_t result = readRegister(instruction->getRegisterS()) *
-                      readRegister(instruction->getRegisterT());
+    int64_t result = (int32_t) readRegister(instruction->getRegisterS()) *
+                      (int32_t)readRegister(instruction->getRegisterT());
     writeHIRegister((uint32_t) ((result & 0xFFFFFFFF00000000) >> 32));
     writeLORegister((uint32_t) (result & 0xFFFFFFFF));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_multu(Instruction *instruction) {
+    uint64_t result = (uint32_t) readRegister(instruction->getRegisterS()) *
+                     (uint32_t)readRegister(instruction->getRegisterT());
+    writeHIRegister((uint32_t) ((result & 0xFFFFFFFF00000000) >> 32));
+    writeLORegister((uint32_t) (result & 0xFFFFFFFF));
     pc += WORD_SIZE_IN_BYTES;
 }
 
