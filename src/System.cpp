@@ -490,6 +490,8 @@ void System::_lw(Instruction *instruction) {
 }
 
 void System::_sb(Instruction *instruction) {
+    writeMemoryByte(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
+                    (uint8_t) (readRegister(instruction->getRegisterT()) & 0xFF));
     pc += WORD_SIZE_IN_BYTES;
 }
 
