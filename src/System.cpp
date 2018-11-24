@@ -307,14 +307,14 @@ void System::_nor(Instruction *instruction) {
 void System::_slt(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   (int32_t) readRegister(instruction->getRegisterS()) <
-                  (int32_t) readRegister(instruction->getRegisterT());
+                  (int32_t) readRegister(instruction->getRegisterT()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sltu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   (uint32_t) readRegister(instruction->getRegisterS()) <
-                  (uint32_t) readRegister(instruction->getRegisterT());
+                  (uint32_t) readRegister(instruction->getRegisterT()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
