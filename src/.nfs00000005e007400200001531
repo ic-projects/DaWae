@@ -359,22 +359,18 @@ void System::_divu(Instruction *instruction) {
 }
 
 void System::_mfhi(Instruction *instruction) {
-    writeRegister(instruction->getRegisterD(), readHIRegister());
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mflo(Instruction *instruction) {
-    writeRegister(instruction->getRegisterD(), readLORegister());
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mthi(Instruction *instruction) {
-    writeHIRegister(readRegister(instruction->getRegisterS()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mtlo(Instruction *instruction) {
-    writeLORegister(readRegister(instruction->getRegisterS()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
