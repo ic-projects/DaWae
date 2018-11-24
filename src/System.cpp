@@ -218,12 +218,15 @@ void System::_sll(Instruction *instruction) {
 
 void System::_srl(Instruction *instruction) {
     writeRegister(readRegister(instruction->getRegisterD()),
-                  readRegister(instruction->getRegisterT() >>
+                  (uint32_t)readRegister(instruction->getRegisterT() >>
                   instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sra(Instruction *instruction) {
+    writeRegister(readRegister(instruction->getRegisterD()),
+                  (int32_t)readRegister(instruction->getRegisterT() >>
+                  instruction->getShiftAmount()));
     pc += WORD_SIZE_IN_BYTES;
 }
 
