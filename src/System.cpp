@@ -317,20 +317,20 @@ void System::_jalr(Instruction *instruction) {
 }
 
 void System::_div(Instruction *instruction) {
-    int32_t denom = readRegister(instruction->getRegisterS());
-    int32_t num   = readRegister(instruction->getRegisterT());
+    int32_t num = readRegister(instruction->getRegisterS());
+    int32_t denom = readRegister(instruction->getRegisterT());
     if (denom != 0) {
-        writeHIRegister(static_cast<uint32_t>(num / denom));
-        writeLORegister(static_cast<uint32_t>(num % denom));
+        writeHIRegister(static_cast<uint32_t>(num % denom));
+        writeLORegister(static_cast<uint32_t>(num / denom));
     }
 }
 
 void System::_divu(Instruction *instruction) {
-    uint32_t denom = readRegister(instruction->getRegisterS());
-    uint32_t num   = readRegister(instruction->getRegisterT());
+    uint32_t num = readRegister(instruction->getRegisterS());
+    uint32_t denom = readRegister(instruction->getRegisterT());
     if (denom != 0) {
-        writeHIRegister(num / denom);
-        writeLORegister(num % denom);
+        writeHIRegister(num % denom);
+        writeLORegister(num / denom);
     }
 }
 
@@ -351,15 +351,15 @@ void System::_mtlo(Instruction *instruction) {
 }
 
 void System::_mult(Instruction *instruction) {
-    int64_t result = static_cast<int32_t>(readRegister(instruction->getRegisterS())) *
-                     static_cast<int32_t>(readRegister(instruction->getRegisterT()));
+    int64_t result = static_cast<int64_t>(static_cast<int32_t>(readRegister(instruction->getRegisterS()))) *
+                     static_cast<int64_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT())));
     writeHIRegister(static_cast<uint32_t>(result >> 32));
     writeLORegister(static_cast<uint32_t>(result));
 }
 
 void System::_multu(Instruction *instruction) {
-    uint64_t result = static_cast<uint32_t>(readRegister(instruction->getRegisterS())) *
-                      static_cast<uint32_t>(readRegister(instruction->getRegisterT()));
+    uint64_t result = static_cast<uint64_t>(readRegister(instruction->getRegisterS())) *
+                      static_cast<uint64_t>(readRegister(instruction->getRegisterT()));
     writeHIRegister(static_cast<uint32_t>(result >> 32));
     writeLORegister(static_cast<uint32_t>(result));
 }
