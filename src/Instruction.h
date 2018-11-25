@@ -44,6 +44,9 @@ enum RTypeFunctionCode {
     MTLO    = 0b010011,
     MULT    = 0b011000,
     MULTU   = 0b011001,
+    SLLV    = 0b000100,
+    SRAV    = 0b000111,
+    SRLV    = 0b000110,
 };
 
 enum InstructionOpcode {
@@ -73,9 +76,6 @@ enum InstructionOpcode {
     LHU     = 0b100101,
     LWL     = 0b100010,
     LWR     = 0b100110,
-    SLLV    = 0b000100,
-    SRAV    = 0b000111,
-    SRLV    = 0b000110,
 
     // J-Type Instructions
     J       = 0b000010,

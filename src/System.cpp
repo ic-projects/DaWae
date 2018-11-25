@@ -9,6 +9,7 @@ void System::start() {
     while (pc != ADDR_NULL) {
         if (pc >= ADDR_INSTR && pc <= ADDR_INSTR + MEMORY_INSTR_SIZE) {
             auto *instruction = new Instruction(readMemoryWord(pc));
+//            instruction->printRaw();
             executeInstruction(instruction);
         } else {
             cerr << "Attempted to execute an instruction outside of executable memory" << endl;
@@ -62,7 +63,7 @@ void System::executeInstruction(Instruction *instruction) {
 
 uint32_t System::readMemoryWord(uint32_t address) {
     if (address % WORD_SIZE_IN_BYTES != 0) {
-        cerr << "Attempted to read a word on a non aligned memory address." << endl;
+        cerr << "Attempted to read a word on a non aligned memory address " << std::hex << address << endl;
         exit(ERROR_CPU_EXCEPTION);
     }
 
@@ -88,13 +89,13 @@ uint8_t System::readMemoryByte(uint32_t address) {
         return static_cast<uint8_t>((getchar() >> ((3 - address + ADDR_GETC) * 8)) & MASK_BYTE);
     }
 
-    cerr << "Attempted to read a byte from an invalid or write-only memory address." << endl;
+    cerr << "Attempted to read a byte from an invalid or write-only memory address " << std::hex << address << endl;
     exit(ERROR_CPU_EXCEPTION);
 }
 
 uint16_t System::readMemoryHalfWord(uint32_t address) {
     if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
-        cerr << "Attempted to read a half word on a non aligned memory address." << endl;
+        cerr << "Attempted to read a half word on a non aligned memory address " << std::hex << address << endl;
         exit(ERROR_CPU_EXCEPTION);
     }
 
@@ -111,7 +112,7 @@ uint16_t System::readMemoryHalfWord(uint32_t address) {
 
 void System::writeMemoryWord(uint32_t address, uint32_t word) {
     if (address % WORD_SIZE_IN_BYTES != 0) {
-        cerr << "Attempted to write a word on a non aligned memory address." << endl;
+        cerr << "Attempted to write a word on a non aligned memory address " << std::hex << address << endl;
         exit(ERROR_CPU_EXCEPTION);
     }
 
@@ -136,13 +137,13 @@ void System::writeMemoryByte(uint32_t address, uint8_t byte) {
         return;
     }
 
-    cerr << "Attempted to write to an invalid or read-only memory address." << endl;
+    cerr << "Attempted to write to an invalid or read-only memory address " << std::hex << address << endl;
     exit(ERROR_CPU_EXCEPTION);
 }
 
 void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
     if (address % HALF_WORD_SIZE_IN_BYTES != 0) {
-        cerr << "Attempted to write a half word on a non aligned memory address." << endl;
+        cerr << "Attempted to write a half word on a non aligned memory address " << std::hex << address << endl;
         exit(ERROR_CPU_EXCEPTION);
     }
 
@@ -167,7 +168,7 @@ uint32_t System::readRegister(uint8_t reg) {
 
 void System::writeRegister(uint8_t reg, uint32_t word) {
     if (reg >= REGISTERS_SIZE) {
-        cerr << "Attempted to write to an invalid register." << endl;
+        cerr << "Attempted to write to an invalid register " << std::hex << reg << endl;
         exit(ERROR_INVALID_INSTRUCTION);
     }
     registers[reg] = word;
@@ -217,6 +218,9 @@ void System::executeRTypeInstruction(Instruction *instruction) {
         case MTLO: _mtlo(instruction); break;
         case MULT: _mult(instruction); break;
         case MULTU: _multu(instruction); break;
+        case SLLV: _sllv(instruction); break;
+        case SRAV: _srav(instruction); break;
+        case SRLV: _srlv(instruction); break;
     }
 }
 
@@ -229,14 +233,14 @@ void System::_sll(Instruction *instruction) {
 
 void System::_srl(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  (uint32_t)readRegister(instruction->getRegisterT() >>
-                  instruction->getShiftAmount()));
+                  readRegister(instruction->getRegisterT()) >>
+                  instruction->getShiftAmount());
 }
 
 void System::_sra(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  (int32_t)readRegister(instruction->getRegisterT() >>
-                  instruction->getShiftAmount()));
+                  static_cast<uint32_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT()) >>
+                                        instruction->getShiftAmount())));
 }
 
 void System::_add(Instruction *instruction) {
@@ -408,12 +412,22 @@ void System::_beq(Instruction *instruction) {
 }
 
 void System::_bne(Instruction *instruction) {
+    if (readRegister(instruction->getRegisterS()) !=
+        readRegister(instruction->getRegisterT())) {
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
 }
 
 void System::_blez(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) <= 0) {
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
 }
 
 void System::_bgtz(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) > 0) {
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
 }
 
 void System::_b_spec(Instruction *instruction) {
@@ -422,7 +436,7 @@ void System::_b_spec(Instruction *instruction) {
 void System::_lb(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryByte(static_cast<int16_t>(instruction->getImmediateOperand()) +
-                                 instruction->getRegisterS()));
+                                 readRegister(instruction->getRegisterS())));
 }
 
 void System::_lh(Instruction *instruction) {
@@ -480,12 +494,21 @@ void System::_lwr(Instruction *instruction) {
 }
 
 void System::_sllv(Instruction *instruction) {
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterT()) <<
+                  readRegister(instruction->getRegisterS()));
 }
 
 void System::_srav(Instruction *instruction) {
+    writeRegister(instruction->getRegisterD(),
+                  static_cast<uint32_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT())) >>
+                                        readRegister(instruction->getRegisterS())));
 }
 
 void System::_srlv(Instruction *instruction) {
+    writeRegister(instruction->getRegisterD(),
+                  readRegister(instruction->getRegisterT()) >>
+                  readRegister(instruction->getRegisterS()));
 }
 
 void System::_j(Instruction *instruction) {
@@ -493,6 +516,7 @@ void System::_j(Instruction *instruction) {
 }
 
 void System::_jal(Instruction *instruction) {
+
 }
 
 void System::setPC(uint32_t address) {
@@ -502,5 +526,5 @@ void System::setPC(uint32_t address) {
 }
 
 void System::incrementPC(uint32_t offset) {
-    setPC(nextPC + offset);
+    setPC(nextPC + static_cast<int32_t>(offset));
 }
