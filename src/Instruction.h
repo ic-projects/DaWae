@@ -32,7 +32,6 @@ enum RTypeFunctionCode {
     AND     = 0b100100,
     OR      = 0b100101,
     XOR     = 0b100110,
-    NOR     = 0b100111,
     SLT     = 0b101010,
     SLTU    = 0b101011,
     JR      = 0b001000,

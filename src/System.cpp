@@ -7,7 +7,8 @@
 
 void System::start() {
     while (pc != ADDR_NULL) {
-        executeInstruction(new Instruction(readMemoryWord(pc)));
+        auto *instruction = new Instruction(readMemoryWord(pc));
+        executeInstruction(instruction);
 
         if (updatePC) {
             incrementPC(WORD_SIZE_IN_BYTES);
@@ -397,7 +398,7 @@ void System::_lui(Instruction *instruction) {
 void System::_beq(Instruction *instruction) {
     if (readRegister(instruction->getRegisterS()) ==
         readRegister(instruction->getRegisterT())) {
-        incrementPC(instruction->getImmediateOperand() << 2);
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
     }
 }
 
@@ -483,6 +484,7 @@ void System::_srlv(Instruction *instruction) {
 }
 
 void System::_j(Instruction *instruction) {
+    setPC((pc & 0xF0000000) | (instruction->getJumpAddress() << 2));
 }
 
 void System::_jal(Instruction *instruction) {
