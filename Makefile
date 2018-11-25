@@ -42,8 +42,11 @@ bin/mips_simulator: src/Simulator.cpp src/Instruction.cpp src/Instruction.h src/
 simulator: bin/mips_simulator
 
 testbench:
-	cd test/ && python mips_testbench.py
+	cd test && pyinstaller --onefile mips_testbench.py
+	mv test/dist/mips_testbench bin/
 
 clean:
 	rm -rf bin
 	rm -rf test/bin
+	rm -rf test/dist
+	rm -rf test/build
