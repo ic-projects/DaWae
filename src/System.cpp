@@ -538,8 +538,8 @@ void System::incrementPC(uint32_t offset) {
 }
 
 void System::_bgezal(Instruction *instruction) {
+    writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
     if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) >= 0) {
-        writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
         incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
     }
 }
@@ -557,8 +557,8 @@ void System::_bltz(Instruction *instruction) {
 }
 
 void System::_bltzal(Instruction *instruction) {
+    writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
     if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) < 0) {
-        writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
         incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
     }
 }
