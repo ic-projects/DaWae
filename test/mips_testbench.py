@@ -38,7 +38,7 @@ for test in os.listdir('test/bin'):
     else:
         print('{}, {}, FAIL, {}, {}'.format(testName.upper(), instruction, author, description))
         # Print error message with red text
-        print('\033[91mExited with {} and expected {}; Output was "{}" and expected "{}"\033[0m'.format(exitCode, expectedExitCode, output, expectedOut))
+        sys.stderr.write('\033[91mExited with {} and expected {}; Output was "{}" and expected "{}"\033[0m\n'.format(exitCode, expectedExitCode, output, expectedOut))
 
     count += 1
 
