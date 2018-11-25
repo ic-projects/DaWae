@@ -537,6 +537,7 @@ void System::incrementPC(uint32_t offset) {
     setPC(nextPC + static_cast<int32_t>(offset));
 }
 
+// Special B-Type functions
 void System::_bgezal(Instruction *instruction) {
     writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
     if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) >= 0) {

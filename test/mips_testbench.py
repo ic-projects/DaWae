@@ -33,10 +33,10 @@ for test in os.listdir('test/bin'):
     instruction = testName.split('.')[0].upper()
 
     if exitCode == expectedExitCode and output == expectedOut:
-        print('{}, {}, PASS, {}, {}'.format(testName.upper(), instruction, author, description))
+        print('{:10} {:7} PASS, {:7} {:1}'.format(testName + ',', instruction + ',', author + ',', description))
         passCount += 1
     else:
-        print('{}, {}, FAIL, {}, {}'.format(testName.upper(), instruction, author, description))
+        print('{:10} {:7} FAIL, {:7} {:1}'.format(testName + ',', instruction + ',', author + ',', description))
         # Print error message with red text
         sys.stderr.write('\033[91mExited with {} and expected {}; Output was "{}" and expected "{}"\033[0m\n'.format(exitCode, expectedExitCode, output, expectedOut))
 
