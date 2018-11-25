@@ -46,3 +46,4 @@ testbench:
 
 clean:
 	rm -rf bin
+	rm -rf test/bin

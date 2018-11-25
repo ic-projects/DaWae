@@ -19,16 +19,18 @@ using namespace std;
 
 class System {
 private:
-    Instruction *decodedInstruction = nullptr;
-    uint32_t fetchedInstruction = 0;
     uint32_t pc = ADDR_INSTR;
-    bool hasStarted = false;
+    uint32_t nextPC = ADDR_INSTR + WORD_SIZE_IN_BYTES;
+    bool updatePC = true;
 
     uint32_t hi = 0;
     uint32_t lo = 0;
     uint32_t registers[REGISTERS_SIZE] = {0};
     uint8_t memoryInstr[MEMORY_INSTR_SIZE] = {0};
     uint8_t memoryData[MEMORY_DATA_SIZE] = {0};
+
+    void setPC(uint32_t address);
+    void incrementPC(uint32_t offset);
 
     // I-Type functions
     void _addiu(Instruction *instruction);

@@ -7,23 +7,14 @@
 
 void System::start() {
     while (pc != ADDR_NULL) {
-        // Execute
-        if (decodedInstruction != nullptr) {
-            executeInstruction(decodedInstruction);
-        }
+        executeInstruction(new Instruction(readMemoryWord(pc)));
 
-        // Decode
-        if (hasStarted) {
-            decodedInstruction = new Instruction(fetchedInstruction);
-        } else {
-            hasStarted = true;
+        if (updatePC) {
+            incrementPC(WORD_SIZE_IN_BYTES);
         }
-
-        // Fetch
-        if (pc != ADDR_NULL) {
-            fetchedInstruction = readMemoryWord(pc);
-        }
+        updatePC = true;
     }
+
     exit(getExitCode());
 }
 
@@ -179,12 +170,15 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
 void System::writeHIRegister(uint32_t word) {
     hi = word;
 }
+
 void System::writeLORegister(uint32_t word) {
     lo = word;
 }
+
 uint32_t System::readHIRegister() {
     return hi;
 }
+
 uint32_t System::readLORegister() {
     return lo;
 }
@@ -226,21 +220,18 @@ void System::_sll(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterT() <<
                   instruction->getShiftAmount()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srl(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   (uint32_t)readRegister(instruction->getRegisterT() >>
                   instruction->getShiftAmount()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sra(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   (int32_t)readRegister(instruction->getRegisterT() >>
                   instruction->getShiftAmount()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_add(Instruction *instruction) {
@@ -253,14 +244,12 @@ void System::_add(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s + t));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_addu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) +
                   readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sub(Instruction *instruction) {
@@ -273,238 +262,201 @@ void System::_sub(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterD(), static_cast<uint32_t>(s - t));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_subu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) - readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_and(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) &
                   readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_or(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) |
                   readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_xor(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) ^
                   readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_nor(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   ~(readRegister(instruction->getRegisterS()) |
                     readRegister(instruction->getRegisterT())));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_slt(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  (int32_t) readRegister(instruction->getRegisterS()) <
-                  (int32_t) readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
+                  static_cast<int32_t>(readRegister(instruction->getRegisterS())) <
+                  static_cast<int32_t>(readRegister(instruction->getRegisterT())) ? 1 : 0);
 }
 
 void System::_sltu(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  (uint32_t) readRegister(instruction->getRegisterS()) <
-                  (uint32_t) readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
+                  readRegister(instruction->getRegisterS()) <
+                  readRegister(instruction->getRegisterT()) ? 1 : 0);
 }
 
 void System::_jr(Instruction *instruction) {
-    pc = readRegister(instruction->getRegisterS());
+    setPC(readRegister(instruction->getRegisterS()));
 }
 
 void System::_jalr(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_div(Instruction *instruction) {
     int32_t denom = readRegister(instruction->getRegisterS());
     int32_t num   = readRegister(instruction->getRegisterT());
-    if (denom == 0) {
-        pc += WORD_SIZE_IN_BYTES;
-        return;
+    if (denom != 0) {
+        writeHIRegister(static_cast<uint32_t>(num / denom));
+        writeLORegister(static_cast<uint32_t>(num % denom));
     }
-
-    writeHIRegister((int32_t) num / denom);
-    writeLORegister((int32_t) num % denom);
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_divu(Instruction *instruction) {
     uint32_t denom = readRegister(instruction->getRegisterS());
     uint32_t num   = readRegister(instruction->getRegisterT());
-    if (denom == 0) {
-        pc += WORD_SIZE_IN_BYTES;
-        return;
+    if (denom != 0) {
+        writeHIRegister(num / denom);
+        writeLORegister(num % denom);
     }
-
-    writeHIRegister(num / denom);
-    writeLORegister(num % denom);
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mfhi(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(), readHIRegister());
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mflo(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(), readLORegister());
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mthi(Instruction *instruction) {
     writeHIRegister(readRegister(instruction->getRegisterS()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mtlo(Instruction *instruction) {
     writeLORegister(readRegister(instruction->getRegisterS()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_mult(Instruction *instruction) {
-    int64_t result = (int32_t) readRegister(instruction->getRegisterS()) *
-                      (int32_t)readRegister(instruction->getRegisterT());
-    writeHIRegister((uint32_t) ((result & 0xFFFFFFFF00000000) >> 32));
-    writeLORegister((uint32_t) (result & 0xFFFFFFFF));
-    pc += WORD_SIZE_IN_BYTES;
+    int64_t result = static_cast<int32_t>(readRegister(instruction->getRegisterS())) *
+                     static_cast<int32_t>(readRegister(instruction->getRegisterT()));
+    writeHIRegister(static_cast<uint32_t>(result >> 32));
+    writeLORegister(static_cast<uint32_t>(result));
 }
 
 void System::_multu(Instruction *instruction) {
-    uint64_t result = (uint32_t) readRegister(instruction->getRegisterS()) *
-                     (uint32_t)readRegister(instruction->getRegisterT());
-    writeHIRegister((uint32_t) ((result & 0xFFFFFFFF00000000) >> 32));
-    writeLORegister((uint32_t) (result & 0xFFFFFFFF));
-    pc += WORD_SIZE_IN_BYTES;
+    uint64_t result = static_cast<uint32_t>(readRegister(instruction->getRegisterS())) *
+                      static_cast<uint32_t>(readRegister(instruction->getRegisterT()));
+    writeHIRegister(static_cast<uint32_t>(result >> 32));
+    writeLORegister(static_cast<uint32_t>(result));
 }
 
 void System::_addiu(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) +
-                  instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
+                  static_cast<int16_t>(instruction->getImmediateOperand()));
 }
 
 void System::_slti(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  (int32_t) readRegister(instruction->getRegisterS()) <
-                  (int16_t) instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
+                  static_cast<int32_t>(readRegister(instruction->getRegisterS())) <
+                  static_cast<int16_t>(instruction->getImmediateOperand()) ? 1 : 0);
 }
 
 void System::_sltiu(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  (uint32_t) readRegister(instruction->getRegisterS()) <
-                  (uint16_t) instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
+                  static_cast<uint32_t>(readRegister(instruction->getRegisterS())) <
+                  instruction->getImmediateOperand() ? 1 : 0);
 }
 
 void System::_andi(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) &
                   instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_ori(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) |
                   instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_xori(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readRegister(instruction->getRegisterS()) ^
                   instruction->getImmediateOperand());
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lui(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   instruction->getImmediateOperand() << 16);
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_beq(Instruction *instruction) {
     if (readRegister(instruction->getRegisterS()) ==
         readRegister(instruction->getRegisterT())) {
-        pc += static_cast<uint16_t>(instruction->getImmediateOperand()) << 2;
-    } else {
-        pc += WORD_SIZE_IN_BYTES;
+        incrementPC(instruction->getImmediateOperand() << 2);
     }
 }
 
 void System::_bne(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_blez(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_bgtz(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_b_spec(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lb(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryByte(instruction->getImmediateOperand() + instruction->getRegisterS()));
-    pc += WORD_SIZE_IN_BYTES;
+                  readMemoryByte(static_cast<int16_t>(instruction->getImmediateOperand()) +
+                                 instruction->getRegisterS()));
 }
 
 void System::_lh(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryHalfWord(instruction->getImmediateOperand() + instruction->getRegisterS()));
-    pc += WORD_SIZE_IN_BYTES;
+                  readMemoryHalfWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
+                                     instruction->getRegisterS()));
 }
 
 void System::_lbu(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lw(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryWord(instruction->getImmediateOperand() + readRegister(instruction->getRegisterS())));
-    pc += WORD_SIZE_IN_BYTES;
+                  readMemoryWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
+                                 readRegister(instruction->getRegisterS())));
 }
 
 void System::_sb(Instruction *instruction) {
-    writeMemoryByte(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
-                    (uint8_t) (readRegister(instruction->getRegisterT()) & 0xFF));
-    pc += WORD_SIZE_IN_BYTES;
+    writeMemoryByte(readRegister(instruction->getRegisterS()) +
+                    static_cast<int16_t>(instruction->getImmediateOperand()),
+                    static_cast<uint8_t>(readRegister(instruction->getRegisterT()) & MASK_BYTE));
 }
 
 void System::_sh(Instruction *instruction) {
-    writeMemoryHalfWord(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
-                        (uint16_t) (readRegister(instruction->getRegisterT()) & 0xFFFF));
-    pc += WORD_SIZE_IN_BYTES;
+    writeMemoryHalfWord(readRegister(instruction->getRegisterS()) +
+                        static_cast<int16_t>(instruction->getImmediateOperand()),
+                        static_cast<uint16_t>(readRegister(instruction->getRegisterT()) & MASK_HALF_WORD));
 }
 
 void System::_sw(Instruction *instruction) {
-    writeMemoryWord(readRegister(instruction->getRegisterS()) + instruction->getImmediateOperand(),
+    writeMemoryWord(readRegister(instruction->getRegisterS()) +
+                    static_cast<int16_t>(instruction->getImmediateOperand()),
                     readRegister(instruction->getRegisterT()));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_addi(Instruction *instruction) {
@@ -517,37 +469,38 @@ void System::_addi(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(s + imm));
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lhu(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lwl(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_lwr(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_sllv(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srav(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_srlv(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_j(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
 }
 
 void System::_jal(Instruction *instruction) {
-    pc += WORD_SIZE_IN_BYTES;
+}
+
+void System::setPC(uint32_t address) {
+    updatePC = false;
+    pc = nextPC;
+    nextPC = address;
+}
+
+void System::incrementPC(uint32_t offset) {
+    setPC(nextPC + offset);
 }
