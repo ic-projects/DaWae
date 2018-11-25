@@ -73,7 +73,6 @@ private:
     void _and(Instruction *instruction);
     void _or(Instruction *instruction);
     void _xor(Instruction *instruction);
-    void _nor(Instruction *instruction);
     void _slt(Instruction *instruction);
     void _sltu(Instruction *instruction);
     void _jr(Instruction *instruction);

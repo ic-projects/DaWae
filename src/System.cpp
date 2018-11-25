@@ -199,7 +199,6 @@ void System::executeRTypeInstruction(Instruction *instruction) {
         case AND: _and(instruction); break;
         case OR: _or(instruction); break;
         case XOR: _xor(instruction); break;
-        case NOR: _nor(instruction); break;
         case SLT: _slt(instruction); break;
         case SLTU: _sltu(instruction); break;
         case JR: _jr(instruction); break;
@@ -285,12 +284,6 @@ void System::_xor(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterS()) ^
                   readRegister(instruction->getRegisterT()));
-}
-
-void System::_nor(Instruction *instruction) {
-    writeRegister(instruction->getRegisterD(),
-                  ~(readRegister(instruction->getRegisterS()) |
-                    readRegister(instruction->getRegisterT())));
 }
 
 void System::_slt(Instruction *instruction) {
