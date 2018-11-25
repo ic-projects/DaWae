@@ -9,7 +9,6 @@ void System::start() {
     while (pc != ADDR_NULL) {
         if (pc >= ADDR_INSTR && pc <= ADDR_INSTR + MEMORY_INSTR_SIZE) {
             auto *instruction = new Instruction(readMemoryWord(pc));
-//            instruction->printRaw();
             executeInstruction(instruction);
         } else {
             cerr << "Attempted to execute an instruction outside of executable memory" << endl;
@@ -57,7 +56,7 @@ void System::executeInstruction(Instruction *instruction) {
         case LWL: _lwl(instruction); break;
         case LWR: _lwr(instruction); break;
         case J: _j(instruction); break;
-        case JAL: _jalr(instruction); break;
+        case JAL: _jal(instruction); break;
     }
 }
 
@@ -313,6 +312,8 @@ void System::_jr(Instruction *instruction) {
 }
 
 void System::_jalr(Instruction *instruction) {
+    writeRegister(instruction->getRegisterD(), nextPC + WORD_SIZE_IN_BYTES);
+    setPC(readRegister(instruction->getRegisterS()));
 }
 
 void System::_div(Instruction *instruction) {
@@ -431,6 +432,12 @@ void System::_bgtz(Instruction *instruction) {
 }
 
 void System::_b_spec(Instruction *instruction) {
+    switch (instruction->getBCode()) {
+        case BGEZ: _bgez(instruction); break;
+        case BGEZAL: _bgezal(instruction); break;
+        case BLTZ: _bltz(instruction); break;
+        case BLTZAL: _bltzal(instruction); break;
+    }
 }
 
 void System::_lb(Instruction *instruction) {
@@ -516,7 +523,8 @@ void System::_j(Instruction *instruction) {
 }
 
 void System::_jal(Instruction *instruction) {
-
+    writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
+    setPC((pc & 0xF0000000) | (instruction->getJumpAddress() << 2));
 }
 
 void System::setPC(uint32_t address) {
@@ -527,4 +535,30 @@ void System::setPC(uint32_t address) {
 
 void System::incrementPC(uint32_t offset) {
     setPC(nextPC + static_cast<int32_t>(offset));
+}
+
+void System::_bgezal(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) >= 0) {
+        writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
+}
+
+void System::_bgez(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) >= 0) {
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
+}
+
+void System::_bltz(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) < 0) {
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
+}
+
+void System::_bltzal(Instruction *instruction) {
+    if (static_cast<int32_t>(readRegister(instruction->getRegisterS())) < 0) {
+        writeRegister(31, nextPC + WORD_SIZE_IN_BYTES);
+        incrementPC(static_cast<uint32_t>(static_cast<int16_t>(instruction->getImmediateOperand()) << 2));
+    }
 }

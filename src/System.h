@@ -56,9 +56,6 @@ private:
     void _lhu(Instruction *instruction);
     void _lwl(Instruction *instruction);
     void _lwr(Instruction *instruction);
-    void _sllv(Instruction *instruction);
-    void _srav(Instruction *instruction);
-    void _srlv(Instruction *instruction);
     void _j(Instruction *instruction);
     void _jal(Instruction *instruction);
 
@@ -85,6 +82,15 @@ private:
     void _mtlo(Instruction *instruction);
     void _mult(Instruction *instruction);
     void _multu(Instruction *instruction);
+    void _sllv(Instruction *instruction);
+    void _srav(Instruction *instruction);
+    void _srlv(Instruction *instruction);
+
+    // Special B-Type functions
+    void _bgez(Instruction *instruction);
+    void _bgezal(Instruction *instruction);
+    void _bltz(Instruction *instruction);
+    void _bltzal(Instruction *instruction);
 
 public:
     System(){};

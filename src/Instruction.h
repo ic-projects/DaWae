@@ -82,7 +82,7 @@ enum InstructionOpcode {
     JAL     = 0b000011,
 };
 
-enum BTypeRegTCodes {
+enum BTypeCode {
     BGEZ    = 0b00001,
     BGEZAL  = 0b10001,
     BLTZ    = 0b00000,
@@ -100,6 +100,7 @@ public:
     uint8_t getRegisterD();
     uint8_t getShiftAmount();
     RTypeFunctionCode getFunctionCode();
+    BTypeCode getBCode();
     uint16_t getImmediateOperand();
     uint32_t getJumpAddress();
     void printRaw();

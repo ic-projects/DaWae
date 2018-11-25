@@ -45,3 +45,7 @@ uint32_t Instruction::getJumpAddress() {
 uint32_t Instruction::getRaw() {
     return instruction;
 }
+
+BTypeCode Instruction::getBCode() {
+    return static_cast<BTypeCode>(getRegisterT());
+}
