@@ -223,8 +223,8 @@ void System::executeRTypeInstruction(Instruction *instruction) {
 // R-Type Instructions
 void System::_sll(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  readRegister(instruction->getRegisterT() <<
-                  instruction->getShiftAmount()));
+                  readRegister(instruction->getRegisterT()) <<
+                  instruction->getShiftAmount());
 }
 
 void System::_srl(Instruction *instruction) {
