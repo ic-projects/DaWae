@@ -7,8 +7,13 @@
 
 void System::start() {
     while (pc != ADDR_NULL) {
-        auto *instruction = new Instruction(readMemoryWord(pc));
-        executeInstruction(instruction);
+        if (pc >= ADDR_INSTR && pc <= ADDR_INSTR + MEMORY_INSTR_SIZE) {
+            auto *instruction = new Instruction(readMemoryWord(pc));
+            executeInstruction(instruction);
+        } else {
+            cerr << "Attempted to execute an instruction outside of executable memory" << endl;
+            exit(ERROR_CPU_EXCEPTION);
+        }
 
         if (updatePC) {
             incrementPC(WORD_SIZE_IN_BYTES);
