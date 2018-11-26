@@ -1,5 +1,5 @@
 # qf316
-# Add two large negative integers to cause an overflow
+# Add -2147483648 to -2147483648 (should cause overflow)
     .globl entry
 
 entry:

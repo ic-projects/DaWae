@@ -1,5 +1,5 @@
 # ns4516
-# Add two positive integers
+# Add 100 and 17
     .globl entry
 
 entry:

@@ -1,5 +1,5 @@
 # ns4516
-# Add a negative number
+# Add 0 to -5
     .globl entry
 
 entry:

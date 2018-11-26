@@ -3,5 +3,5 @@
     .globl entry
 
 entry:
-    addi $v0, $v0, 4
+    addiu $v0, $v0, 4
     jr $zero

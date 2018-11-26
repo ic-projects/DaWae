@@ -1,5 +1,5 @@
 # ns4516
-# Add two large positive integers to cause an overflow
+# Add 2147483000 and 999 (should cause overflow)
     .globl entry
 
 entry:

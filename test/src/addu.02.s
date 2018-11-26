@@ -1,5 +1,5 @@
 # qf316
-# Add two large positive integers without overflow
+# Add 2147483000 and 99999999 (should overflow without exception)
     .globl entry
 
 entry:

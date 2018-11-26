@@ -1,5 +1,5 @@
 # qf316
-# Add two negative numbers
+# Add -16 to -16
     .globl entry
 
 entry:
