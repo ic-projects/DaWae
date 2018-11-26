@@ -173,22 +173,6 @@ void System::writeRegister(uint8_t reg, uint32_t word) {
     registers[reg] = word;
 }
 
-void System::writeHIRegister(uint32_t word) {
-    hi = word;
-}
-
-void System::writeLORegister(uint32_t word) {
-    lo = word;
-}
-
-uint32_t System::readHIRegister() {
-    return hi;
-}
-
-uint32_t System::readLORegister() {
-    return lo;
-}
-
 uint8_t System::getExitCode() {
     return static_cast<uint8_t>(readRegister(2) & MASK_BYTE);
 }
@@ -320,8 +304,8 @@ void System::_div(Instruction *instruction) {
     int32_t num = readRegister(instruction->getRegisterS());
     int32_t denom = readRegister(instruction->getRegisterT());
     if (denom != 0) {
-        writeHIRegister(static_cast<uint32_t>(num % denom));
-        writeLORegister(static_cast<uint32_t>(num / denom));
+        hi = static_cast<uint32_t>(num % denom);
+        lo = static_cast<uint32_t>(num / denom);
     }
 }
 
@@ -329,39 +313,41 @@ void System::_divu(Instruction *instruction) {
     uint32_t num = readRegister(instruction->getRegisterS());
     uint32_t denom = readRegister(instruction->getRegisterT());
     if (denom != 0) {
-        writeHIRegister(num % denom);
-        writeLORegister(num / denom);
+        hi = num % denom;
+        lo = num / denom;
     }
 }
 
 void System::_mfhi(Instruction *instruction) {
-    writeRegister(instruction->getRegisterD(), readHIRegister());
+    writeRegister(instruction->getRegisterD(), hi);
 }
 
 void System::_mflo(Instruction *instruction) {
-    writeRegister(instruction->getRegisterD(), readLORegister());
+    writeRegister(instruction->getRegisterD(), lo);
 }
 
 void System::_mthi(Instruction *instruction) {
-    writeHIRegister(readRegister(instruction->getRegisterS()));
+    uint32_t word = readRegister(instruction->getRegisterS());
+    hi = word;
 }
 
 void System::_mtlo(Instruction *instruction) {
-    writeLORegister(readRegister(instruction->getRegisterS()));
+    uint32_t word = readRegister(instruction->getRegisterS());
+    lo = word;
 }
 
 void System::_mult(Instruction *instruction) {
     int64_t result = static_cast<int64_t>(static_cast<int32_t>(readRegister(instruction->getRegisterS()))) *
                      static_cast<int64_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT())));
-    writeHIRegister(static_cast<uint32_t>(result >> 32));
-    writeLORegister(static_cast<uint32_t>(result));
+    hi = static_cast<uint32_t>(result >> 32);
+    lo = static_cast<uint32_t>(result);
 }
 
 void System::_multu(Instruction *instruction) {
     uint64_t result = static_cast<uint64_t>(readRegister(instruction->getRegisterS())) *
                       static_cast<uint64_t>(readRegister(instruction->getRegisterT()));
-    writeHIRegister(static_cast<uint32_t>(result >> 32));
-    writeLORegister(static_cast<uint32_t>(result));
+    hi = static_cast<uint32_t>(result >> 32);
+    lo = static_cast<uint32_t>(result);
 }
 
 void System::_addiu(Instruction *instruction) {
