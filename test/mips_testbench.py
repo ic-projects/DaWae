@@ -15,7 +15,7 @@ for test in os.listdir('test/bin'):
     p = Popen([sys.argv[1], 'test/bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
     while p.poll() is None:
         time.sleep(0.1)
-    exitCode = p.returncode
+    exitCode = int(p.returncode)
     output = p.communicate()[0].rstrip('\0')
 
     # Remove .mips.bin file ending
