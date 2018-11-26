@@ -6,5 +6,5 @@ entry:
     li $t0, -24
     li $t1, 3
     divu $t0, $t1
-    mflo $v0
+    mfhi $v0
     jr $zero
