@@ -78,7 +78,7 @@ uint32_t System::readMemoryWord(uint32_t address) {
 }
 
 uint8_t System::readMemoryByte(uint32_t address) {
-    if (address >= ADDR_INSTR && address < ADDR_DATA) {
+    if (address >= ADDR_INSTR && address < ADDR_INSTR + MEMORY_INSTR_SIZE) {
         return memoryInstr[address - ADDR_INSTR];
     }
     if (address >= ADDR_DATA && address < ADDR_DATA + MEMORY_DATA_SIZE) {
@@ -438,9 +438,6 @@ void System::_lh(Instruction *instruction) {
                                      instruction->getRegisterS()));
 }
 
-void System::_lbu(Instruction *instruction) {
-}
-
 void System::_lw(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
@@ -475,6 +472,9 @@ void System::_addi(Instruction *instruction) {
     }
 
     writeRegister(instruction->getRegisterT(), static_cast<uint32_t>(s + imm));
+}
+
+void System::_lbu(Instruction *instruction) {
 }
 
 void System::_lhu(Instruction *instruction) {
