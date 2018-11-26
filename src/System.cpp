@@ -222,7 +222,7 @@ void System::_srl(Instruction *instruction) {
 
 void System::_sra(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
-                  static_cast<uint32_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT()) >>
+                  static_cast<uint32_t>(static_cast<int32_t>(static_cast<int32_t>(readRegister(instruction->getRegisterT())) >>
                                         instruction->getShiftAmount())));
 }
 
@@ -364,8 +364,8 @@ void System::_slti(Instruction *instruction) {
 
 void System::_sltiu(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  static_cast<uint32_t>(readRegister(instruction->getRegisterS())) <
-                  instruction->getImmediateOperand() ? 1 : 0);
+                  readRegister(instruction->getRegisterS()) <
+                  static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(instruction->getImmediateOperand()))) ? 1 : 0);
 }
 
 void System::_andi(Instruction *instruction) {
