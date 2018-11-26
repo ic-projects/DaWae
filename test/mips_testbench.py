@@ -24,7 +24,7 @@ for test in os.listdir('test/bin'):
     with open('test/output/' + testName + '.mips.out', 'r') as f:
         # Exit code modulo 256 since exit code size is only 8 bits
         expectedExitCode = int(f.readline()) % 256
-        expectedOut = f.readline()
+        expectedOut = f.read()
 
     # Get test author and description
     testFile = open('test/src/{}.s'.format(testName), 'r')
