@@ -435,7 +435,7 @@ void System::_lb(Instruction *instruction) {
 void System::_lh(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
                   readMemoryHalfWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
-                                     instruction->getRegisterS()));
+                                     readRegister(instruction->getRegisterS())));
 }
 
 void System::_lw(Instruction *instruction) {
