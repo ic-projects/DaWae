@@ -1,5 +1,5 @@
 # ns4516
-# AND 0xAA against 0s to get 0s
+# ANDI 0xAA against 0s to get 0s
     .globl entry
 
 entry:

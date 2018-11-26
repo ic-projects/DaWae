@@ -1,5 +1,5 @@
 # ns4516
-# OR 0xFFFFFFFF and 0x00AA0020 to get itself
+# AND 0xFFFFFFFF and 0x00AA0020 to get itself
     .globl entry
 
 entry:
