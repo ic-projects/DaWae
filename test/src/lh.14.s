@@ -1,5 +1,5 @@
 # ns4516
-# LH from 0x11000000 (1 above exec mem) causing exception
+# LH from 0x10FFFFFF (1 above exec mem) causing exception
     .globl entry
 
 entry:
