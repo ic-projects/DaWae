@@ -4,7 +4,7 @@
 
 # For simulator
 CC = g++
-CPPFLAGS = -W -Wall
+CPPFLAGS = -W -Wall -std=c++11
 
 # For MIPS binaries. Turn on all warnings, enable all optimisations and link everything statically
 MIPS_CC = mips-linux-gnu-gcc
@@ -41,9 +41,14 @@ bin/mips_simulator: src/Simulator.cpp src/Instruction.cpp src/Instruction.h src/
 # Dummy for build simulator to conform to spec
 simulator: bin/mips_simulator
 
-testbench:
+testbench-build:
 	cd test && pyinstaller --onefile mips_testbench.py
-	mv test/dist/mips_testbench bin/
+	mv test/dist/mips_testbench test/
+
+testbench:
+	@echo "Moving pre-built testbench to bin/"
+	@echo "To rebuild the testbench, run make testbench-build"
+	cp test/mips_testbench bin/
 
 clean:
 	rm -rf bin
