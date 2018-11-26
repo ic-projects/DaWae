@@ -475,9 +475,15 @@ void System::_addi(Instruction *instruction) {
 }
 
 void System::_lbu(Instruction *instruction) {
+    writeRegister(instruction->getRegisterT(),
+                  readMemoryByte(readRegister(instruction->getRegisterS()) +
+                                 static_cast<int16_t>(instruction->getImmediateOperand())));
 }
 
 void System::_lhu(Instruction *instruction) {
+    writeRegister(instruction->getRegisterT(),
+                  readMemoryHalfWord(readRegister(instruction->getRegisterS()) +
+                                     static_cast<int16_t>(instruction->getImmediateOperand())));
 }
 
 void System::_lwl(Instruction *instruction) {
