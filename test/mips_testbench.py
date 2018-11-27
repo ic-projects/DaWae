@@ -1,6 +1,5 @@
 from subprocess import Popen, PIPE
 import os
-import time
 import sys
 
 # Compile assembly test files into binary
