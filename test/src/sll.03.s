@@ -4,5 +4,5 @@
 
 entry:
     li $v0, 0xFFFFFFFF
-    sll $v0, 32
+    sll $v0, 31
     jr $zero
