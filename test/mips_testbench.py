@@ -15,7 +15,14 @@ for test in sorted(os.listdir('test/bin')):
     while p.poll() is None:
         continue
     exitCode = int(p.returncode)
-    output = p.communicate()[0].rstrip('\0')
+    output, err = p.communicate()
+
+    # Output any errors received
+    if err:
+        sys.stderr.write(err)
+        continue
+
+    output = output.rstrip('\0')
 
     # Remove .mips.bin file ending
     testName = test[:-9]
