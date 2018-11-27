@@ -32,9 +32,16 @@ for test in sorted(os.listdir('test/bin')):
         expectedOut = f.read()
 
     # Get test author and description
-    testFile = open('test/src/{}.s'.format(testName), 'r')
-    author = testFile.readline().strip('# \n')
-    description = testFile.readline().strip('# \n')
+    testFile = None
+    if os.path.isfile('test/src/{}.s'.format(testName)):
+        testFile = open('test/src/{}.s'.format(testName), 'r')
+    elif os.path.isfile('test/src/{}.c'.format(testName)):
+        testFile = open('test/src/{}.c'.format(testName), 'r')
+    else:
+        continue
+
+    author = testFile.readline().strip('# \n /')
+    description = testFile.readline().strip('# \n /')
     instruction = testName.split('.')[0].upper()
 
     if exitCode == expectedExitCode and output == expectedOut:
