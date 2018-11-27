@@ -1,8 +1,7 @@
 # ns4516
-# SRL 0x229A192 by 8
+# SRL 0 by 5
     .globl entry
 
 entry:
-    li $v0, 0x229A192
-    srl $v0, 8
+    srl $v0, $v0, 5
     jr $zero
