@@ -8,4 +8,3 @@ entry:
     div $t0, $t1
     mflo $v0
     jr $zero
-
