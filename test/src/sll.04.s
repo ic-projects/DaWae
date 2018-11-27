@@ -3,5 +3,5 @@
     .globl entry
 
 entry:
-    sll $v0, 5
+    sll $v0, $v0, 5
     jr $zero
