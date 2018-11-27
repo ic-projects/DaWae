@@ -3,6 +3,5 @@
     .globl entry
 
 entry:
-    li $t1, 0xAA
-    xor $v0, $t0, $t1
+    xor $v0, $t0, 0xAA
     jr $zero
