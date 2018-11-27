@@ -48,6 +48,7 @@ testbench-build:
 testbench:
 	@echo "Moving pre-built testbench to bin/"
 	@echo "To rebuild the testbench, run make testbench-build"
+	mkdir -p bin/
 	cp test/mips_testbench bin/
 
 clean:
