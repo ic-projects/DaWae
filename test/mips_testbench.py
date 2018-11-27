@@ -10,7 +10,7 @@ for test in os.listdir('test/src'):
 
 count = 0
 passCount = 0
-for test in os.listdir('test/bin'):
+for test in sorted(os.listdir('test/bin')):
     p = Popen([sys.argv[1], 'test/bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
     while p.poll() is None:
         continue
