@@ -509,7 +509,7 @@ void System::_lwr(Instruction *instruction) {
 void System::_sllv(Instruction *instruction) {
     writeRegister(instruction->getRegisterD(),
                   readRegister(instruction->getRegisterT()) <<
-                  readRegister(instruction->getRegisterS()));
+                  (readRegister(instruction->getRegisterS()) & 0x1F));
 }
 
 void System::_srav(Instruction *instruction) {
