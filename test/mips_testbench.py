@@ -20,7 +20,6 @@ for test in sorted(os.listdir('test/bin')):
     # Output any errors received
     if err:
         sys.stderr.write(err)
-        continue
 
     output = output.rstrip('\0')
 
