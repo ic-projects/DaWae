@@ -14,7 +14,7 @@ passCount = 0
 for test in os.listdir('test/bin'):
     p = Popen([sys.argv[1], 'test/bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
     while p.poll() is None:
-        time.sleep(0.1)
+        continue
     exitCode = int(p.returncode)
     output = p.communicate()[0].rstrip('\0')
 
