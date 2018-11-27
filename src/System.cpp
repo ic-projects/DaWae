@@ -489,8 +489,11 @@ void System::_lhu(Instruction *instruction) {
 void System::_lwl(Instruction *instruction) {
     uint32_t address = readRegister(instruction->getRegisterS()) + static_cast<int16_t>(instruction->getImmediateOperand());
     uint32_t remainder = address % WORD_SIZE_IN_BYTES;
-    uint32_t maskedMemoryData = readMemoryWord(address - remainder) & (0xFFFFFFFF >> (8 * remainder)) << (8 * remainder);
-    uint32_t maskedRegisterData = readRegister(instruction->getRegisterT()) & (0xFFFFFFFF >> (8 * (3 - remainder)));
+    uint32_t maskedMemoryData = readMemoryWord(address - remainder) & ((0xFFFFFFFF >> (8 * remainder)) << (8 * remainder));
+    uint32_t maskedRegisterData = 0;
+    if (remainder != 0) {
+        maskedRegisterData = readRegister(instruction->getRegisterT()) & (0xFFFFFFFF >> (8 * (4 - remainder)));
+    }
 
     writeRegister(instruction->getRegisterT(),
                   maskedMemoryData | maskedRegisterData);
@@ -500,7 +503,10 @@ void System::_lwr(Instruction *instruction) {
     uint32_t address = readRegister(instruction->getRegisterS()) + static_cast<int16_t>(instruction->getImmediateOperand());
     uint32_t remainder = address % WORD_SIZE_IN_BYTES;
     uint32_t maskedMemoryData = readMemoryWord(address - remainder) >> (8 * (3 - remainder));
-    uint32_t maskedRegisterData = (readRegister(instruction->getRegisterT()) >> (8 * remainder)) << (8 * remainder);
+    uint32_t maskedRegisterData = 0;
+    if (remainder != 3) {
+        maskedRegisterData = (readRegister(instruction->getRegisterT()) >> (8 * (remainder + 1))) << (8 * (remainder + 1));
+    }
 
     writeRegister(instruction->getRegisterT(),
                   maskedMemoryData | maskedRegisterData);
