@@ -146,8 +146,8 @@ void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
         exit(ERROR_CPU_EXCEPTION);
     }
 
-    if (address >= ADDR_PUTC && address < ADDR_PUTC + 2) {
-        putchar(halfWord << ((1 - address + ADDR_PUTC) * 16));
+    if (address == ADDR_PUTC || address == ADDR_PUTC + WORD_SIZE_IN_BYTES) {
+        putchar(halfWord << ((1 - (address + ADDR_PUTC) / 2) * 16));
         return;
     }
 
@@ -428,8 +428,8 @@ void System::_b_spec(Instruction *instruction) {
 
 void System::_lb(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryByte(static_cast<int16_t>(instruction->getImmediateOperand()) +
-                                 readRegister(instruction->getRegisterS())));
+                  static_cast<uint32_t>(static_cast<int32_t>(static_cast<int8_t>(readMemoryByte(static_cast<int16_t>(instruction->getImmediateOperand()) +
+                                                                                                readRegister(instruction->getRegisterS()))))));
 }
 
 void System::_lh(Instruction *instruction) {
