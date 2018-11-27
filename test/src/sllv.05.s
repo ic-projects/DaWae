@@ -4,6 +4,6 @@
 
 entry:
     li $t0, 2
-    li $t1, 0x1FFFFFFE2
+    li $t1, 0x1FFFFFE2
     sllv $v0, $t0, $t1
     jr $zero
