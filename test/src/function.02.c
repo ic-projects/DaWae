@@ -1,5 +1,6 @@
 // ns4516
-// Function correctly returns 1
+// Function correctly returns 1 + 2 = 3
+
 int add(int a, int b);
 
 int entry() {

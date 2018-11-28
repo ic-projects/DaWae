@@ -1,5 +1,5 @@
 // qf316
-// LeetCode Q169 - returns correct most common number
+// Should find the most common number in an array
 
 int mostCommon(int numbers[], int size);
 

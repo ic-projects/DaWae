@@ -1,5 +1,6 @@
 // ns4516
 // Function correctly returns 1
+
 int test_function();
 
 int entry() {
