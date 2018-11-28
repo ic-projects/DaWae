@@ -1,6 +1,9 @@
 from subprocess import Popen, PIPE
+from threading import Timer
 import os
 import sys
+
+TEST_TIMEOUT = 5
 
 # Compile assembly test files into binary
 os.system('mkdir -p test/bin')
@@ -11,20 +14,28 @@ for test in os.listdir('test/src'):
 count = 0
 passCount = 0
 for test in sorted(os.listdir('test/bin')):
-    p = Popen([sys.argv[1], 'test/bin/' + test], stdout=PIPE, stderr=PIPE, stdin=PIPE)
-    while p.poll() is None:
-        continue
-    exitCode = int(p.returncode)
+    # Remove .mips.bin file ending
+    testName = test[:-9]
+
+    input = PIPE
+    # Check if input files exist
+    if os.path.isfile('test/input/{}.in'.format(testName)):
+        input = open('test/input/{}.in'.format(testName))
+
+    p = Popen([sys.argv[1], 'test/bin/' + test], stdout=PIPE, stderr=PIPE, stdin=input)
+
+    # Kill simulator if test takes longer than TEST_TIMEOUT seconds
+    timer = Timer(TEST_TIMEOUT, p.kill)
+    timer.start()
+
     output, err = p.communicate()
+    exitCode = int(p.returncode)
 
     # Output any errors received
     if err:
         sys.stderr.write(err)
 
     output = output.rstrip('\0')
-
-    # Remove .mips.bin file ending
-    testName = test[:-9]
 
     with open('test/output/' + testName + '.mips.out', 'r') as f:
         # Exit code modulo 256 since exit code size is only 8 bits
@@ -50,8 +61,9 @@ for test in sorted(os.listdir('test/bin')):
     else:
         print('{}, {}, Fail, {}, {}'.format(testName, instruction, author, description))
         # Print error message with red text
-        sys.stderr.write('ERROR: Exit code was {} and expected {}; Output was "{}" and expected "{}"\n'.format(exitCode, expectedExitCode, output, expectedOut))
+        sys.stderr.write('ERROR FROM {}: Exit code was {} and expected {}; Output was "{}" and expected "{}"\n'.format(testName, exitCode, expectedExitCode, output, expectedOut))
 
+    timer.cancel()
     count += 1
 
 print('Test cases passed: {}/{} -- {}%'.format(passCount, count, 100 * passCount / count))
