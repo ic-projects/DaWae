@@ -98,8 +98,8 @@ uint16_t System::readMemoryHalfWord(uint32_t address) {
         exit(ERROR_CPU_EXCEPTION);
     }
 
-    if (address >= ADDR_GETC && address < ADDR_GETC + 2) {
-        return static_cast<uint8_t>((getchar() >> ((1 - address + ADDR_GETC) * 16)) & MASK_HALF_WORD);
+    if (address == ADDR_GETC || address == ADDR_GETC + HALF_WORD_SIZE_IN_BYTES) {
+        return static_cast<uint16_t>((getchar() >> ((1 - ((address - ADDR_GETC) / 2)) * 16)) & MASK_HALF_WORD);
     }
 
     uint16_t result = 0;
@@ -147,7 +147,7 @@ void System::writeMemoryHalfWord(uint32_t address, uint16_t halfWord) {
     }
 
     if (address == ADDR_PUTC || address == ADDR_PUTC + WORD_SIZE_IN_BYTES) {
-        putchar(halfWord << ((1 - (address + ADDR_PUTC) / 2) * 16));
+        putchar(halfWord << ((1 - ((address - ADDR_PUTC) / 2)) * 16));
         return;
     }
 
@@ -434,8 +434,8 @@ void System::_lb(Instruction *instruction) {
 
 void System::_lh(Instruction *instruction) {
     writeRegister(instruction->getRegisterT(),
-                  readMemoryHalfWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
-                                     readRegister(instruction->getRegisterS())));
+                  static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(readMemoryHalfWord(static_cast<int16_t>(instruction->getImmediateOperand()) +
+                                                                                                     readRegister(instruction->getRegisterS()))))));
 }
 
 void System::_lw(Instruction *instruction) {
@@ -489,7 +489,7 @@ void System::_lhu(Instruction *instruction) {
 void System::_lwl(Instruction *instruction) {
     uint32_t address = readRegister(instruction->getRegisterS()) + static_cast<int16_t>(instruction->getImmediateOperand());
     uint32_t remainder = address % WORD_SIZE_IN_BYTES;
-    uint32_t maskedMemoryData = readMemoryWord(address - remainder) & ((0xFFFFFFFF >> (8 * remainder)) << (8 * remainder));
+    uint32_t maskedMemoryData = (readMemoryWord(address - remainder) & (0xFFFFFFFF >> (8 * remainder))) << (8 * remainder);
     uint32_t maskedRegisterData = 0;
     if (remainder != 0) {
         maskedRegisterData = readRegister(instruction->getRegisterT()) & (0xFFFFFFFF >> (8 * (4 - remainder)));
