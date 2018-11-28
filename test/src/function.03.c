@@ -1,6 +1,8 @@
 // qf316
 // Should find the most common number in an array
 
+asm("li $29, 0x24000000");
+
 int mostCommon(int numbers[], int size);
 
 int entry() {
