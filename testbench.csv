@@ -1,0 +1,331 @@
+add.01, ADD, Pass, ns4516, Add 100 and 17
+add.02, ADD, Pass, ns4516, Add 2147483000 and 999 (should cause overflow)
+add.03, ADD, Pass, ns4516, Add 0 to -5
+add.04, ADD, Pass, qf316, Add -16 to -16
+add.05, ADD, Pass, qf316, Add -2147483648 to -2147483648 (should cause overflow)
+add.06, ADD, Pass, ns4516, Add 1 to 2147483646 (should not cause overflow)
+add.07, ADD, Pass, ns4516, Add -1 to -2147483647 (should not cause overflow)
+addi.01, ADDI, Pass, ns4516, Add 4 and 0
+addi.02, ADDI, Pass, ns4516, Add -999 to 882 in $v0
+addi.03, ADDI, Pass, ns4516, Add 1 to 2147483646 in $v0 (should not cause overflow)
+addi.04, ADDI, Pass, ns4516, Add 1 to 2147483647 in $v0 (should cause overflow)
+addiu.01, ADDIU, Pass, ns4516, Add 4 and 0
+addiu.02, ADDIU, Pass, ns4516, Add -999 to 882 in $v0
+addiu.03, ADDIU, Pass, ns4516, Add 1 to 2147483646 in $v0 (should not cause overflow)
+addiu.04, ADDIU, Pass, ns4516, Add 1 to 2147483647 in $v0 (should cause overflow without exception)
+addiu.05, ADDIU, Pass, ns4516, Add -10 to -2147483648 in $v0 (should cause overflow without exception)
+addu.01, ADDU, Pass, ns4516, Add 16 and 8
+addu.02, ADDU, Pass, qf316, Add 2147483000 and 99999999 (should overflow without exception)
+addu.03, ADDU, Pass, ns4516, Add -2147483648 and -1 (should overflow without exception)
+and.01, AND, Pass, ns4516, AND 0xAA against 0s to get 0s
+and.02, AND, Pass, ns4516, AND 0xFFFFFFFF and 0x00AA0020 to get itself
+and.03, AND, Pass, ns4516, AND 0x00AC against 0xB0D0
+andi.01, ANDI, Pass, ns4516, ANDI 0xAA against 0s to get 0s
+andi.02, ANDI, Pass, ns4516, ANDI 0xFFFFFFFF and 0x29FC to get itself
+andi.03, ANDI, Pass, ns4516, ANDI 0x00AC against 0xB0D0
+beq.01, BEQ, Pass, qf316, BEQ on -16 and -16 should branch
+beq.02, BEQ, Pass, qf316, BEQ on -16 and 0 should not branch
+beq.03, BEQ, Pass, qf316, BEQ on 1 and 0 should not branch
+beq.04, BEQ, Pass, qf316, BEQ on 2147483647 (MAX_INT) and -2147483648 (MIN_INT) should not branch
+beq.05, BEQ, Pass, qf316, BEQ on 2147483647 (MAX_INT) and 2147483647 (MAX_INT) should branch
+beq.06, BEQ, Pass, qf316, BEQ on -2147483648 (MIN_INT) and -2147483648 (MIN_INT) should branch
+bgez.01, BGEZ, Pass, qf316, BGEZ on -16 should not branch
+bgez.02, BGEZ, Pass, qf316, BGEZ on -1 should not branch
+bgez.03, BGEZ, Pass, qf316, BGEZ on 1 should branch
+bgez.04, BGEZ, Pass, qf316, BGEZ on 2147483647 (MAX_INT) should branch
+bgez.05, BGEZ, Pass, qf316, BGEZ on 0 should branch
+bgez.06, BGEZ, Pass, qf316, BGEZ on -2147483648 (MIN_INT) should not branch
+bgezal.01, BGEZAL, Pass, qf316, BGEZAL on -16 should not branch
+bgezal.02, BGEZAL, Pass, qf316, BGEZAL on -1 should not branch
+bgezal.03, BGEZAL, Pass, qf316, BGEZAL on 1 should branch
+bgezal.04, BGEZAL, Pass, qf316, BGEZAL on 2147483647 (MAX_INT) should branch
+bgezal.05, BGEZAL, Pass, qf316, BGEZAL on 0 should branch
+bgezal.06, BGEZAL, Pass, qf316, BGEZAL on -2147483648 (MIN_INT) should not branch
+bgtz.01, BGTZ, Pass, qf316, BGTZ on -16 should not branch
+bgtz.02, BGTZ, Pass, qf316, BGTZ on -1 should not branch
+bgtz.03, BGTZ, Pass, qf316, BGTZ on 1 should branch
+bgtz.04, BGTZ, Pass, qf316, BGTZ on 2147483647 (MAX_INT) should branch
+bgtz.05, BGTZ, Pass, qf316, BGTZ on 0 should not branch
+bgtz.06, BGTZ, Pass, qf316, BGTZ on -2147483648 (MIN_INT) should not branch
+blez.01, BLEZ, Pass, qf316, BLEZ on -16 should branch
+blez.02, BLEZ, Pass, qf316, BLEZ on -1 should branch
+blez.03, BLEZ, Pass, qf316, BLEZ on 1 should not branch
+blez.04, BLEZ, Pass, qf316, BLEZ on 2147483647 (MAX_INT) should not branch
+blez.05, BLEZ, Pass, qf316, BLEZ on 0 should branch
+blez.06, BLEZ, Pass, qf316, BLEZ on -2147483648 (MIN_INT) should branch
+bltz.01, BLTZ, Pass, qf316, BLTZ on -16 should branch
+bltz.02, BLTZ, Pass, qf316, BLTZ on -1 should branch
+bltz.03, BLTZ, Pass, qf316, BLTZ on 1 should not branch
+bltz.04, BLTZ, Pass, qf316, BLTZ on 2147483647 (MAX_INT) should not branch
+bltz.05, BLTZ, Pass, qf316, BLTZ on 0 should not branch
+bltz.06, BLTZ, Pass, qf316, BLTZ on -2147483648 (MIN_INT) should branch
+bltzal.01, BLTZAL, Pass, qf316, BLTZAL on -5 should branch
+bltzal.02, BLTZAL, Pass, qf316, BLTZAL on -1 should branch
+bltzal.03, BLTZAL, Pass, qf316, BLTZAL on 1 should not branch
+bltzal.04, BLTZAL, Pass, qf316, BLTZAL on 2147483647 (MAX_INT) should not branch
+bltzal.05, BLTZAL, Pass, qf316, BLTZAL on 0 should not branch
+bltzal.06, BLTZAL, Pass, qf316, BLTZAL on -2147483648 (MIN_INT) should branch
+bne.01, BNE, Pass, qf316, BNE on -16 and -16 should not branch
+bne.02, BNE, Pass, qf316, BNE on -16 and 0 should branch
+bne.03, BNE, Pass, qf316, BNE on 1 and 0 should branch
+bne.04, BNE, Pass, qf316, BNE on 2147483647 (MAX_INT) and -2147483648 (MIN_INT) should branch
+bne.05, BNE, Pass, qf316, BNE on 2147483647 (MAX_INT) and 2147483647 (MAX_INT) should not branch
+bne.06, BNE, Pass, qf316, BNE on -2147483648 (MIN_INT) and -2147483648 (MIN_INT) should not branch
+div.01, DIV, Pass, ns4516, DIV 24 by 3 checking quotient
+div.02, DIV, Pass, ns4516, DIV -24 by 3 checking quotient
+div.03, DIV, Pass, ns4516, DIV 24 by 3 checking remainder
+div.04, DIV, Pass, ns4516, DIV -24 by 3 checking remainder
+div.05, DIV, Pass, ns4516, DIV 100 by 12 checking quotient
+div.06, DIV, Pass, ns4516, DIV 100 by 12 checking remainder
+div.07, DIV, Pass, ns4516, DIV -100 by 12 checking quotient
+div.08, DIV, Pass, ns4516, DIV -100 by 12 checking remainder
+divu.01, DIVU, Pass, ns4516, DIVU 24 by 3 checking quotient
+divu.02, DIVU, Pass, ns4516, DIVU -24 by 3 checking quotient
+divu.03, DIVU, Pass, ns4516, DIVU 24 by 3 checking remainder
+divu.04, DIVU, Pass, ns4516, DIVU -24 by 3 checking remainder
+divu.05, DIVU, Pass, ns4516, DIVU 100 by 12 checking quotient
+divu.06, DIVU, Pass, ns4516, DIVU 100 by 12 checking remainder
+divu.07, DIVU, Pass, ns4516, DIVU -100 by 12 checking quotient
+divu.08, DIVU, Pass, ns4516, DIVU -100 by 12 checking remainder
+function.01, FUNCTION, Pass, ns4516, Function correctly returns 1
+function.02, FUNCTION, Pass, ns4516, Function correctly returns 1 + 2 = 3
+function.03, FUNCTION, Pass, qf316, Should find the most common number in an array
+function.04, FUNCTION, Pass, qf316, Takes input from STDIN and output it to STDOUT
+function.05, FUNCTION, Pass, qf316, Recursive multiplication should return correct result
+j.01, J, Pass, qf316, Unconditional jump to exit should exit immediately
+jalr.01, JALR, Pass, qf316, JALR should store return address in specified register
+jr.01, JR, Pass, qf316, JR should jump to address specified in register
+jr.02, JR, Pass, qf316, JR only after executing instruction in branch delay slot
+lb.01, LB, Pass, ns4516, LB from uninitialised 0x20000000
+lb.02, LB, Pass, ns4516, LB from uninitialised 0x1FFFFFFF causing exception
+lb.03, LB, Pass, ns4516, LB from uninitialised 0x23FFFFFF
+lb.04, LB, Pass, ns4516, LB from uninitialised 0x24000000 causing exception
+lb.05, LB, Pass, ns4516, LB from uninitialised 0x20000000 with 0x3FFFFFF offset
+lb.06, LB, Pass, ns4516, LB from uninitialised 0x20000000 with 0x4000000 offset causing exception
+lb.07, LB, Pass, ns4516, LB from uninitialised 0x200000FF with -255 offset
+lb.08, LB, Pass, ns4516, LB from uninitialised 0x200000FF with -256 offset causing exception
+lb.09, LB, Pass, ns4516, LB from 0x20000000 initialised to be 0xFF
+lb.10, LB, Pass, ns4516, LB from 0x20000000 with offset 0x10000 initialised to be 0xFF
+lb.11, LB, Pass, ns4516, LB from 0x10000000 (exec mem) without exception
+lb.12, LB, Pass, ns4516, LB from 0x10FFFFFF (exec mem) without exception
+lb.13, LB, Pass, ns4516, LB from 0xFFFFFFF (1 below exec mem) causing exception
+lb.14, LB, Pass, ns4516, LB from 0x11000000 (1 above exec mem) causing exception
+lb.15, LB, Pass, ns4516, LB from write only 0x30000004 (memory mapped input)
+lb.16, LB, Pass, ns4516, LB 0x8F from 0x20000000 and check sign extended
+lbu.01, LBU, Pass, ns4516, LBU from uninitialised 0x20000000
+lbu.02, LBU, Pass, ns4516, LBU from 0x2000FFFF initalised to be 0xAC
+lbu.03, LBU, Pass, ns4516, LBU from 0x2000FFFF with offset 0xFFFF initalised to be 0xAC
+lbu.04, LBU, Pass, ns4516, LBU 0x8F from 0x200000FF and check not sign extended
+lbu.05, LBU, Pass, ns4516, LBU from invalid memory address 0x1FFFFFFF
+lbu.06, LBU, Pass, ns4516, LBU from invalid memory address 0x24000000
+lbu.07, LBU, Pass, ns4516, LBU from read only memory address 0x10000000
+lh.01, LH, Pass, ns4516, LH from uninitialised 0x20000000
+lh.02, LH, Pass, ns4516, LH from uninitialised 0x1FFFFFFF causing exception
+lh.03, LH, Pass, ns4516, LH from uninitialised 0x23FFFFFE
+lh.04, LH, Pass, ns4516, LH from uninitialised 0x23FFFFFF causing exception
+lh.05, LH, Pass, ns4516, LH from uninitialised 0x20000000 with 0x3FFFFFE offset
+lh.06, LH, Pass, ns4516, LH from uninitialised 0x20000000 with 0x3FFFFFF offset causing exception
+lh.07, LH, Pass, ns4516, LH from uninitialised 0x200000FF with -255 offset
+lh.08, LH, Pass, ns4516, LH from uninitialised 0x200000FF with -256 offset causing exception
+lh.09, LH, Pass, ns4516, LH from 0x20000000 initialised to be 0xFFFF
+lh.10, LH, Pass, ns4516, LH from 0x20000000 with offset 0x10000 initialised to be 0xFFFF
+lh.11, LH, Pass, ns4516, LH from 0x10000000 (exec mem) without exception
+lh.12, LH, Pass, ns4516, LH from 0x10FFFFFE (exec mem) without exception
+lh.13, LH, Pass, ns4516, LH from 0xFFFFFFF (1 below exec mem) causing exception
+lh.14, LH, Pass, ns4516, LH from 0x10FFFFFF (1 above exec mem) causing exception
+lh.15, LH, Pass, ns4516, LH from write only 0x30000004 (memory mapped input)
+lh.16, LH, Pass, ns4516, LH from misaligned memory address 0x20000001
+lh.17, LH, Pass, ns4516, LH from misaligned memory address 0x20000000 with offset 0xFF
+lhu.01, LHU, Pass, ns4516, LHU from uninitialised 0x20000000
+lhu.02, LHU, Pass, ns4516, LHU from 0x2000FFFE initalised to be 0xFFAC
+lhu.03, LHU, Pass, ns4516, LHU from 0x2000FFFF with offset 0xFFFF initalised to be 0xAC
+lhu.04, LHU, Pass, ns4516, LHU 0x8F from 0x200000FE and check not sign extended
+lhu.05, LHU, Pass, ns4516, LHU from invalid memory address 0x1FFFFFFF
+lhu.06, LHU, Pass, ns4516, LHU from invalid memory address 0x23FFFFFF
+lhu.07, LHU, Pass, ns4516, LHU from read only memory address 0x10000000
+lhu.08, LHU, Pass, ns4516, LHU from unaligned memory address 0x20000001
+lui.01, LUI, Pass, ns4516, LUI 0xFFFF into $v0
+lui.02, LUI, Pass, ns4516, LUI 0x9A1C into $v0 and shift 16 to check
+lui.03, LUI, Pass, ns4516, LUI 0x9A1C into $v0 and shift 24 to check
+lw.01, LW, Pass, ns4516, LW from uninitialised 0x20000000
+lw.02, LW, Pass, ns4516, LW from uninitialised 0x1FFFFFFF causing exception
+lw.03, LW, Pass, ns4516, LW from uninitialised 0x23FFFFFC
+lw.04, LW, Pass, ns4516, LW from uninitialised 0x23FFFFFD causing exception
+lw.05, LW, Pass, ns4516, LW from uninitialised 0x20000000 with 0x3FFFFFC offset
+lw.06, LW, Pass, ns4516, LW from uninitialised 0x20000000 with 0x3FFFFFD offset causing exception
+lw.07, LW, Pass, ns4516, LW from uninitialised 0x200000FF with -255 offset
+lw.08, LW, Pass, ns4516, LW from uninitialised 0x200000FF with -256 offset causing exception
+lw.09, LW, Pass, ns4516, LW from 0x20000000 initialised to be 0xFFFFFFFF
+lw.10, LW, Pass, ns4516, LW from 0x20000000 with offset 0x10000 initialised to be 0xFFFFFFFF
+lw.11, LW, Pass, ns4516, LW from 0x10000000 (exec mem) without exception
+lw.12, LW, Pass, ns4516, LW from 0x10FFFFFC (exec mem) without exception
+lw.13, LW, Pass, ns4516, LW from 0xFFFFFFF (1 below exec mem) causing exception
+lw.14, LW, Pass, ns4516, LW from 0x10FFFFFD (1 above exec mem) causing exception
+lw.15, LW, Pass, ns4516, LW from write only 0x30000004 (memory mapped input)
+lw.16, LW, Pass, ns4516, LW from misaligned memory address 0x20000001
+lw.17, LW, Pass, ns4516, LW from misaligned memory address 0x20000000 with offset 0xFF
+lw.18, LW, Pass, ns4516, LW from misaligned memory address 0x20000002
+lw.19, LW, Pass, ns4516, LW from misaligned memory address 0x20000003
+lw.20, LW, Pass, ns4516, LW from misaligned memory address 0x20000000 with offset 0xFE
+lw.21, LW, Pass, ns4516, LW from misaligned memory address 0x20000000 with offset 0xFD
+lwl.01, LWL, Pass, qf316, LWL on word aligned memory address should replace entire word
+lwl.02, LWL, Pass, qf316, LWL on 1 byte word offset should put give 0xBCDEF178
+lwl.03, LWL, Pass, qf316, LWL on half-word offset should give 0xDEF15678
+lwl.04, LWL, Pass, qf316, LWL on 3 byte offset should give 0xF1345678
+lwr.01, LWR, Pass, qf316, LWR on word aligned memory address should give 0x9ABCDE12
+lwr.02, LWR, Pass, qf316, LWR on 1 byte word offset should give 0x9ABC1234
+lwr.03, LWR, Pass, qf316, LWR on half-word offset should give 0x9A123456
+lwr.04, LWR, Pass, qf316, LWR on 3 byte offset should replace entire word
+mfhi.01, MFHI, Pass, ns4516, Move uninitialised value of HI to $v0
+mfhi.02, MFHI, Pass, ns4516, Load 100 into HI with 100 / 101 and retrieve
+mflo.01, MFLO, Pass, ns4516, Move uninitialised value of LO to $v0
+mflo.02, MFLO, Pass, ns4516, Load 100 into LO with 200 / 2 and retrieve
+mthi.01, MTHI, Pass, ns4516, Load 0 (unintitalised reg) into HI
+mthi.02, MTHI, Pass, ns4516, Load 0xFFFFFFFF into HI and retrieve
+mthi.03, MTHI, Pass, ns4516, Load 144 into HI and retrieve
+mtlo.01, MTLO, Pass, ns4516, Load 0 (unintitalised reg) into LO
+mtlo.02, MTLO, Pass, ns4516, Load 0xFFFFFFFF into LO and retrieve
+mtlo.03, MTLO, Pass, ns4516, Load 144 into LO and retrieve
+mult.01, MULT, Pass, ns4516, MULT 25 by 5 checking LO
+mult.02, MULT, Pass, ns4516, MULT 25 by 5 checking HI
+mult.03, MULT, Pass, ns4516, MULT max int by max int checking LO
+mult.04, MULT, Pass, ns4516, MULT max int by max int checking HI
+mult.05, MULT, Pass, ns4516, MULT 999 by 0 checking LO
+mult.06, MULT, Pass, ns4516, MULT 999 by 0 checking HI
+mult.07, MULT, Pass, ns4516, MULT 1299100821 by 91298749 checking LO
+mult.08, MULT, Pass, ns4516, MULT 1299100821 by 91298749 checking HI
+mult.09, MULT, Pass, ns4516, MULT register holding 10 against itself checking LO
+mult.10, MULT, Pass, ns4516, MULT register holding 10 against itself checking HI
+mult.11, MULT, Pass, ns4516, MULT -8 by -9 checking LO
+mult.12, MULT, Pass, ns4516, MULT -8 by -9 checking HI
+mult.13, MULT, Pass, ns4516, MULT -8 by 9 checking LO
+mult.14, MULT, Pass, ns4516, MULT -8 by 9 checking HI
+multu.01, MULTU, Pass, ns4516, MULTU 25 by 5 checking LO
+multu.02, MULTU, Pass, ns4516, MULTU 25 by -5 checking LO
+multu.03, MULTU, Pass, ns4516, MULTU -25 by -5 checking LO
+multu.04, MULTU, Pass, ns4516, MULTU -25 by -5 checking HI
+multu.05, MULTU, Pass, ns4516, MULTU 0xFFFFFFFF by 0xFFFFFFFF checking LO
+multu.06, MULTU, Pass, ns4516, MULTU 0xFFFFFFFF by 0xFFFFFFFF checking HI
+or.01, OR, Pass, qf316, OR 0xAA against 0s to get itself
+or.02, OR, Pass, ns4516, OR 0xFFFFFFFF and 0x00AA0020 to get 1s
+or.03, OR, Pass, ns4516, OR 0x00AC against 0xB0D0
+ori.01, ORI, Pass, qf316, ORI 0xAA against 0s to get itself
+ori.02, ORI, Pass, ns4516, ORI 0xFFFFFFFF and 0xAA20 to get 1s
+ori.03, ORI, Pass, ns4516, ORI 0x00AC against 0xB0D0
+sb.01, SB, Pass, ns4516, SB 0xFF in 0x20000000(min addr) without exception
+sb.02, SB, Pass, ns4516, SB 0xFF in 0x1FFFFFFF with exception
+sb.03, SB, Pass, ns4516, SB 0xFF in 0x23FFFFFF(max addr) without exception
+sb.04, SB, Pass, ns4516, SB 0xFF in 0x24000000 with exception
+sb.05, SB, Pass, ns4516, SB 0xFF in 0x20000000 with 0x3FFFFFF offset without exception
+sb.06, SB, Pass, ns4516, SB 0xFF in 0x20000000 with 0x4000000 offset with exception
+sb.07, SB, Pass, ns4516, SB 0xFF in 0x200000FF with -255 offset without exception
+sb.08, SB, Pass, ns4516, SB 0xFF in 0x200000FF with -256 offset with exception
+sb.09, SB, Pass, ns4516, SB uninitialised reg in 0x20000000
+sb.10, SB, Pass, ns4516, SB to 0x10000000 (exec mem) which is read only
+sb.11, SB, Pass, ns4516, SB to 0x30000000 (mapped input mem) which is read only
+sh.01, SH, Pass, ns4516, SH 0xFFFF in 0x20000000(min addr) without exception
+sh.02, SH, Pass, ns4516, SH 0xFF in 0x1FFFFFFF with exception
+sh.03, SH, Pass, ns4516, SH 0xFFFF in 0x23FFFFFE(max addr) without exception
+sh.04, SH, Pass, ns4516, SH 0xFFFF in 0x23FFFFFF with exception
+sh.05, SH, Pass, ns4516, SH 0xFFFF in 0x20000000 with 0x3FFFFFE offset without exception
+sh.06, SH, Pass, ns4516, SH 0xFFFF in 0x20000000 with 0x3FFFFFF offset with exception
+sh.07, SH, Pass, ns4516, SH 0xFFFF in 0x200000FF with -255 offset without exception
+sh.08, SH, Pass, ns4516, SH 0xFFFF in 0x200000FF with -256 offset with exception
+sh.09, SH, Pass, ns4516, SH uninitialised reg in 0x20000000
+sh.10, SH, Pass, ns4516, SH 0xFFFF in misaligned address 0x20000001
+sh.11, SH, Pass, ns4516, SH 0xFFFF in misaligned address 0x20000000 with offset 0x3FF
+sh.12, SH, Pass, ns4516, SH to 0x10000000 (exec mem) which is read only
+sh.13, SH, Pass, ns4516, SH to 0x30000000 (mapped input mem) which is read only
+sll.01, SLL, Pass, ns4516, SLL 2 by 3
+sll.02, SLL, Pass, ns4516, SLL 2 by 0
+sll.03, SLL, Pass, ns4516, SLL all 1s by 31
+sll.04, SLL, Pass, ns4516, SLL 0 by 5
+sll.05, SLL, Pass, ns4516, SLL -9 by 3
+sllv.01, SLLV, Pass, ns4516, SLLV 2 by 3
+sllv.02, SLLV, Pass, ns4516, SLLV 2 by 0
+sllv.03, SLLV, Pass, ns4516, SLLV all 1s by 31
+sllv.04, SLLV, Pass, ns4516, SLLV 0 by 5
+sllv.05, SLLV, Pass, ns4516, SLLV 2 by only lower 5 bits of t1 register (2)
+sllv.06, SLLV, Pass, ns4516, SLLV -9 by 3
+sllv.07, SLLV, Pass, ns4516, SLLV 0 by 6
+slt.01, SLT, Pass, ns4516, SLT Check MIN_INT is less than MAX_INT
+slt.02, SLT, Pass, ns4516, SLT Check 0 is not less than 0
+slt.03, SLT, Pass, ns4516, SLT Check 20 is not less than 5
+slt.04, SLT, Pass, ns4516, SLT Check -99 is less than 5
+slti.01, SLTI, Pass, ns4516, SLTI Check MIN_INT is less than 0x7FFF
+slti.02, SLTI, Pass, ns4516, SLTI Check 0 is not less than 0
+slti.03, SLTI, Pass, ns4516, SLTI Check 20 is not less than 5
+slti.04, SLTI, Pass, ns4516, SLTI Check -99 is less than 5
+sltiu.01, SLTIU, Pass, ns4516, SLTUI Check 0xFFFFFFFF isn't less than 0x7FFF
+sltiu.02, SLTIU, Pass, ns4516, SLTUI Check 0 is not less than 0
+sltiu.03, SLTIU, Pass, ns4516, SLTUI Check 20 is not less than 5
+sltiu.04, SLTIU, Pass, ns4516, SLTUI Check -99 isn't less than 5
+sltiu.05, SLTIU, Pass, ns4516, SLTUI Check 55 is less than 56
+sltu.01, SLTU, Pass, ns4516, SLTU Check 0xFFFFFFFF isn't less than 0x7FFFFFFF
+sltu.02, SLTU, Pass, ns4516, SLTU Check 0 is not less than 0
+sltu.03, SLTU, Pass, ns4516, SLTU Check 20 is not less than 5
+sltu.04, SLTU, Pass, ns4516, SLTU Check -99 isn't less than 5
+sltu.05, SLTU, Pass, ns4516, SLTU Check 55 is less than 56
+sra.01, SRA, Pass, qf316, Shift right arithmetic -1000 by 3 should give -125
+sra.02, SRA, Pass, ns4516, SRA 32 by 3
+sra.03, SRA, Pass, ns4516, SRA 0xFFFFFFFF by 31
+sra.04, SRA, Pass, ns4516, SRA 0xD80000CC by 27
+sra.05, SRA, Pass, ns4516, SRA 12 by 0
+sra.06, SRA, Pass, ns4516, SRA 0 by 12
+srav.01, SRAV, Pass, ns4516, SRAV -1000 by 3 should give -125
+srav.02, SRAV, Pass, ns4516, SRAV 32 by 3
+srav.03, SRAV, Pass, ns4516, SRAV 0xFFFFFFFF by 31
+srav.04, SRAV, Pass, ns4516, SRAV 0xD80000CC by 27
+srav.05, SRAV, Pass, ns4516, SRAV 12 by 0
+srav.06, SRAV, Pass, ns4516, SRAV 0 by 12
+srl.01, SRL, Pass, ns4516, SRL 128 by 3
+srl.02, SRL, Pass, ns4516, SRL 2 by 0
+srl.03, SRL, Pass, ns4516, SRL all 1s by 31, inserting 0s
+srl.04, SRL, Pass, ns4516, SRL 0 by 5
+srl.05, SRL, Pass, ns4516, SLL -72 by 3
+srlv.01, SRLV, Pass, ns4516, SRLV 128 by 3
+srlv.02, SRLV, Pass, ns4516, SRLV 2 by 0
+srlv.03, SRLV, Pass, ns4516, SRLV all 1s by 31, inserting 0s
+srlv.04, SRLV, Pass, ns4516, SRLV 0 by 5
+srlv.05, SRLV, Pass, ns4516, SLLV -72 by 3
+sub.01, SUB, Pass, ns4516, SUB 100 and 17
+sub.02, SUB, Pass, ns4516, SUB -2147483648 and 1 (should cause overflow)
+sub.03, SUB, Pass, ns4516, SUB 0 and -5
+sub.04, SUB, Pass, qf316, SUB -16 and -16
+sub.05, SUB, Pass, qf316, SUB 2147483647 and -1 (should cause overflow)
+sub.06, SUB, Pass, ns4516, SUB -2147483647 and 1 (should not cause overflow)
+sub.07, SUB, Pass, ns4516, SUB 2147483646 and -1 (should not cause overflow)
+sub.08, SUB, Pass, ns4516, SUB 999 and 0
+subu.01, SUBU, Pass, ns4516, SUBU 100 and 17
+subu.02, SUBU, Pass, ns4516, SUBU -2147483648 and 1 (should not cause overflow)
+subu.03, SUBU, Pass, ns4516, SUBU 0 and -5
+subu.04, SUBU, Pass, qf316, SUBU -16 and -16
+subu.05, SUBU, Pass, qf316, SUBU 2147483647 and -1 (should not cause overflow)
+subu.06, SUBU, Pass, ns4516, SUBU -2147483647 and 1 (should not cause overflow)
+subu.07, SUBU, Pass, ns4516, SUBU 2147483646 and -1 (should not cause overflow)
+subu.08, SUBU, Pass, ns4516, SUBU 999 and 0
+subu.09, SUBU, Pass, ns4516, SUBU -2147483648 and 2147483647 (should not cause overflow)
+sw.01, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x20000000(min addr) without exception
+sw.02, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x1FFFFFFF with exception
+sw.03, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x23FFFFFC(max addr) without exception
+sw.04, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x23FFFFFD with exception
+sw.05, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x20000000 with 0x3FFFFFC offset without exception
+sw.06, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x20000000 with 0x3FFFFFD offset with exception
+sw.07, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x200000FF with -255 offset without exception
+sw.08, SW, Pass, ns4516, SW 0xFFFFFFFF in 0x200000FF with -256 offset with exception
+sw.09, SW, Pass, ns4516, SW uninitialised reg in 0x20000000
+sw.10, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000001
+sw.11, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000000 with offset 0x3FF
+sw.12, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000002
+sw.13, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000003
+sw.14, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000000 with offset 0x7D2
+sw.15, SW, Pass, ns4516, SW 0xFFFFFFFF in misaligned address 0x20000000 with offset 0x7D3
+sw.16, SW, Pass, ns4516, SW to 0x10000000 (exec mem) which is read only
+sw.17, SW, Pass, ns4516, SW to 0x30000000 (mapped input mem) which is read only
+xor.01, XOR, Pass, ns4516, XOR 0xAA against 0s to get itself
+xor.02, XOR, Pass, ns4516, XOR 0xFFFFFFFF and 0x00AA0020
+xor.03, XOR, Pass, ns4516, XOR 0x00AC against 0xB0D0
+xori.01, XORI, Pass, ns4516, XORI 0xAA against 0s to get itself
+xori.02, XORI, Pass, ns4516, XORI 0xFFFFFFFF and 0xAA20
+xori.03, XORI, Pass, ns4516, XORI 0x00AC against 0xB0D0
+Test cases passed: 330/330 -- 100%
