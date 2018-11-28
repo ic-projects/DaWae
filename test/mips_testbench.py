@@ -51,8 +51,8 @@ for test in sorted(os.listdir('test/bin')):
     else:
         continue
 
-    author = testFile.readline().strip('#\n/,')
-    description = testFile.readline().strip('#\n/,')
+    author = testFile.readline().strip('#\n/, ')
+    description = testFile.readline().strip('#\n/, ')
     instruction = testName.split('.')[0].upper()
 
     if exitCode == expectedExitCode and output == expectedOut:
