@@ -280,12 +280,12 @@ srav.05, SRAV, Pass, ns4516, SRAV 12 by 0
 srav.06, SRAV, Pass, ns4516, SRAV 0 by 12
 srl.01, SRL, Pass, ns4516, SRL 128 by 3
 srl.02, SRL, Pass, ns4516, SRL 2 by 0
-srl.03, SRL, Pass, ns4516, SRL all 1s by 31, inserting 0s
+srl.03, SRL, Pass, ns4516, SRL all 1s by 31 and inserting 0s
 srl.04, SRL, Pass, ns4516, SRL 0 by 5
 srl.05, SRL, Pass, ns4516, SLL -72 by 3
 srlv.01, SRLV, Pass, ns4516, SRLV 128 by 3
 srlv.02, SRLV, Pass, ns4516, SRLV 2 by 0
-srlv.03, SRLV, Pass, ns4516, SRLV all 1s by 31, inserting 0s
+srlv.03, SRLV, Pass, ns4516, SRLV all 1s by 31 and inserting 0s
 srlv.04, SRLV, Pass, ns4516, SRLV 0 by 5
 srlv.05, SRLV, Pass, ns4516, SLLV -72 by 3
 sub.01, SUB, Pass, ns4516, SUB 100 and 17
@@ -328,4 +328,3 @@ xor.03, XOR, Pass, ns4516, XOR 0x00AC against 0xB0D0
 xori.01, XORI, Pass, ns4516, XORI 0xAA against 0s to get itself
 xori.02, XORI, Pass, ns4516, XORI 0xFFFFFFFF and 0xAA20
 xori.03, XORI, Pass, ns4516, XORI 0x00AC against 0xB0D0
-Test cases passed: 330/330 -- 100%

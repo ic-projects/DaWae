@@ -66,4 +66,4 @@ for test in sorted(os.listdir('test/bin')):
     timer.cancel()
     count += 1
 
-sys.stderr.write('Test cases passed: {}/{} -- {}%'.format(passCount, count, 100 * passCount / count))
+sys.stderr.write('Test cases passed: {}/{} -- {}%\n'.format(passCount, count, 100 * passCount / count))
