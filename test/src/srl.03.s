@@ -1,5 +1,5 @@
 # ns4516
-# SRL all 1s by 31, inserting 0s
+# SRL all 1s by 31 and inserting 0s
     .globl entry
 
 entry:
